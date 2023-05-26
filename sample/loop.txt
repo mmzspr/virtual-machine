@@ -1,0 +1,10 @@
+push 0
+push 1
+add
+copy
+copy
+print
+push 5
+if_equal 10
+jmp 2
+exit
