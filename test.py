@@ -6,6 +6,35 @@ import pytest
 # ==============================
 #          基本操作
 # ==============================
+# 出力
+def test_print(capsys):
+    text = "push 1\n"\
+           "push 2\n"\
+           "print\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "2.0\n1.0\n"
+
+# 文字として出力
+def test_print_c(capsys):
+    text = "push 10\n"\
+           "push 111\n"\
+           "push 108\n"\
+           "push 108\n"\
+           "push 101\n"\
+           "push 72\n"\
+           "print_char\n"\
+           "print_char\n"\
+           "print_char\n"\
+           "print_char\n"\
+           "print_char\n"\
+           "print_char\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "Hello\n"
 
 # 加算
 def test_add(capsys):
