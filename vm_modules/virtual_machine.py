@@ -47,6 +47,8 @@ class VirtualMachine:
                         self.cmd_copy()
                     case "print":
                         self.cmd_print()
+                    case "print_char":
+                        self.cmd_print_char()
                     case "if_equal":
                         self.cmd_if_equal(opecode)
                     case "if_greater":
@@ -149,3 +151,7 @@ class VirtualMachine:
     def cmd_print(self):
         x = self.stack.pop()
         print(x)
+    
+    def cmd_print_char(self):
+        x = self.stack.pop()
+        print(chr(int(x)), end="")
