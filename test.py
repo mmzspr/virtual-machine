@@ -42,7 +42,148 @@ def test_mul(capsys):
     out, err = capsys.readouterr()
     assert out == "21.0\n"
 
+# if 3 == 3
+def test_if_equal1(capsys):
+    text = "push 3\n"\
+           "push 3\n"\
+           "if_equal 6\n"\
+           "push 1\n"\
+           "print\n"\
+           "push 2\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "2.0\n"
 
+# if 2 == 3
+def test_if_equal2(capsys):
+    text = "push 2\n"\
+           "push 3\n"\
+           "if_equal 6\n"\
+           "push 1\n"\
+           "print\n"\
+           "push 2\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "1.0\n2.0\n"
+
+# if 5 > 3
+def test_if_greater1(capsys):
+    text = "push 3\n"\
+           "push 5\n"\
+           "if_greater 6\n"\
+           "push 1\n"\
+           "print\n"\
+           "push 2\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "2.0\n"
+
+# if 2 > 3
+def test_if_greater2(capsys):
+    text = "push 3\n"\
+           "push 2\n"\
+           "if_greater 6\n"\
+           "push 1\n"\
+           "print\n"\
+           "push 2\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "1.0\n2.0\n"
+
+# if 3 > 3
+def test_if_greater2(capsys):
+    text = "push 3\n"\
+           "push 3\n"\
+           "if_greater 6\n"\
+           "push 1\n"\
+           "print\n"\
+           "push 2\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "1.0\n2.0\n"
+
+
+# if 2 < 3
+def test_if_lessr1(capsys):
+    text = "push 3\n"\
+           "push 2\n"\
+           "if_less 6\n"\
+           "push 1\n"\
+           "print\n"\
+           "push 2\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "2.0\n"
+
+# if 5 < 3
+def test_if_less2(capsys):
+    text = "push 3\n"\
+           "push 5\n"\
+           "if_less 6\n"\
+           "push 1\n"\
+           "print\n"\
+           "push 2\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "1.0\n2.0\n"
+
+# if 5 < 5
+def test_if_less3(capsys):
+    text = "push 5\n"\
+           "push 5\n"\
+           "if_less 6\n"\
+           "push 1\n"\
+           "print\n"\
+           "push 2\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "1.0\n2.0\n"
+
+# ジャンプ
+def test_if_jmp(capsys):
+    text = "push 1\n"\
+           "print\n"\
+           "jmp 6\n"\
+           "push 2\n"\
+           "print\n"\
+           "push 3\n"\
+           "print\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "1.0\n3.0\n"
+
+# コピー
+def test_if_copy(capsys):
+    text = "push 0\n"\
+           "push 1\n"\
+           "add\n"\
+           "copy\n"\
+           "copy\n"\
+           "print\n"\
+           "push 5\n"\
+           "if_equal 10\n"\
+           "jmp 2\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "1.0\n2.0\n3.0\n4.0\n5.0\n"
 # ==============================
 #          複合
 # ==============================

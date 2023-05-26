@@ -22,17 +22,16 @@ class VirtualMachine:
         self.lines = text.split("\n") # 改行区切りのリスト
         self.instructions = self._parseLines(self.lines) # パース済み命令リスト
         self.stack = vm_stack.Stack() # スタック
+        self.pc = 0 # プログラムカウンタ
     
     # ===== 実行 =====
     def run(self):
-
-        pc = 0 # プログラムカウンタ
         while True:
-            if pc >= len(self.instructions):
-                 vm_error.index_error_pc(pc + 1)
+            if self.pc >= len(self.instructions):
+                 vm_error.index_error_pc(self.pc + 1)
             
-            operand = self.instructions[pc]["operand"]
-            opecode = self.instructions[pc]["opecode"]
+            operand = self.instructions[self.pc]["operand"]
+            opecode = self.instructions[self.pc]["opecode"]
             try:
                 # オペランドに応じて実行
                 match operand:
@@ -44,15 +43,25 @@ class VirtualMachine:
                         self.cmd_sub()
                     case "mul":
                         self.cmd_mul()
+                    case "copy":
+                        self.cmd_copy()
                     case "print":
                         self.cmd_print()
+                    case "if_equal":
+                        self.cmd_if_equal(opecode)
+                    case "if_greater":
+                        self.cmd_if_greater(opecode)
+                    case "if_less":
+                        self.cmd_if_less(opecode)
+                    case "jmp":
+                        self.cmd_jmp(opecode)
                     case "exit":
                         return
                     case _:
                         raise vm_error.Error("ERROR_UNDEFINED_OPCODE")
             except vm_error.Error as e:
-                n_line = pc + 1       # 行番号
-                code = self.lines[pc] # エラーが発生したコード
+                n_line = self.pc + 1       # 行番号
+                code = self.lines[self.pc] # エラーが発生したコード
                 match e.args[0]:
                     case "ERROR_POP_FROM_EMPTY_STACK":
                         vm_error.index_error_pop(n_line, code)
@@ -64,7 +73,7 @@ class VirtualMachine:
                         vm_error.unknown_error(n_line, code)
             
             # プログラムカウンタを進める
-            pc+=1
+            self.pc+=1
     
     # ===== 構文解析 =====
     def _parseLines(self, lines):
@@ -102,6 +111,40 @@ class VirtualMachine:
         x = self.stack.pop()
         y = self.stack.pop()
         self.stack.push(x * y)
+
+    def cmd_copy(self):
+        x = self.stack.pop()
+        self.stack.push(x)
+        self.stack.push(x)
+    
+    def cmd_if_equal(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        x = self.stack.pop()
+        y = self.stack.pop()
+        if x == y:
+            self.pc = int(opcode[0]) -2
+    
+    def cmd_if_greater(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        x = self.stack.pop()
+        y = self.stack.pop()
+        if x > y:
+            self.pc = int(opcode[0]) -2
+    
+    def cmd_if_less(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        x = self.stack.pop()
+        y = self.stack.pop()
+        if x < y:
+            self.pc = int(opcode[0]) -2
+    
+    def cmd_jmp(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        self.pc = int(opcode[0]) -2
     
     def cmd_print(self):
         x = self.stack.pop()
