@@ -6,7 +6,7 @@ Pythonで実装した仮想スタックマシン
 |------|------|
 |push n| スタックにnをpush |
 | add | スタックから2つpopして，加算した結果をpush |
-| add | スタックから2つpopして，減算した結果をpush |
+| sub | スタックから2つpopして，減算した結果をpush |
 | mul | スタックから2つpopして，乗算した結果をpush |
 | copy | スタックから1つpopして，2回push |
 | print | スタックから1つpopして，画面に出力 |
