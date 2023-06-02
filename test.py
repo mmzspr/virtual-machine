@@ -185,10 +185,10 @@ def test_if_less3(capsys):
     assert out == "1.0\n2.0\n"
 
 # ジャンプ
-def test_if_jmp(capsys):
+def test_if_jump(capsys):
     text = "push 1\n"\
            "print\n"\
-           "jmp 6\n"\
+           "jump 6\n"\
            "push 2\n"\
            "print\n"\
            "push 3\n"\
@@ -208,7 +208,7 @@ def test_if_copy(capsys):
            "print\n"\
            "push 5\n"\
            "if_equal 10\n"\
-           "jmp 2\n"\
+           "jump 2\n"\
            "exit\n"
     virtual_machine.run(text)
     out, err = capsys.readouterr()

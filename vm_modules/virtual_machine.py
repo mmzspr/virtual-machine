@@ -55,8 +55,8 @@ class VirtualMachine:
                         self.cmd_if_greater(opecode)
                     case "if_less":
                         self.cmd_if_less(opecode)
-                    case "jmp":
-                        self.cmd_jmp(opecode)
+                    case "jump":
+                        self.cmd_jump(opecode)
                     case "exit":
                         return
                     case _:
@@ -143,7 +143,7 @@ class VirtualMachine:
         if x < y:
             self.pc = int(opcode[0]) -2
     
-    def cmd_jmp(self, opcode):
+    def cmd_jump(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.pc = int(opcode[0]) -2
