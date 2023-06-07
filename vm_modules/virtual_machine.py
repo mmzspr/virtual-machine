@@ -31,12 +31,12 @@ class VirtualMachine:
                  vm_error.index_error_pc(self.pc + 1)
             
             operand = self.instructions[self.pc]["operand"]
-            opecode = self.instructions[self.pc]["opecode"]
+            opcode = self.instructions[self.pc]["opcode"]
             try:
                 # オペランドに応じて実行
                 match operand:
                     case "push":
-                        self.cmd_push(opecode)
+                        self.cmd_push(opcode)
                     case "add":
                         self.cmd_add()
                     case "sub":
@@ -50,13 +50,13 @@ class VirtualMachine:
                     case "print_char":
                         self.cmd_print_char()
                     case "if_equal":
-                        self.cmd_if_equal(opecode)
+                        self.cmd_if_equal(opcode)
                     case "if_greater":
-                        self.cmd_if_greater(opecode)
+                        self.cmd_if_greater(opcode)
                     case "if_less":
-                        self.cmd_if_less(opecode)
+                        self.cmd_if_less(opcode)
                     case "jump":
-                        self.cmd_jump(opecode)
+                        self.cmd_jump(opcode)
                     case "exit":
                         return
                     case _:
@@ -86,8 +86,8 @@ class VirtualMachine:
         for line in lines:
             data = line.split(" ")
             operand = data[0]
-            opecode = [float(i) for i in data[1:]]
-            result.append({"operand":operand, "opecode":opecode})
+            opcode = [float(i) for i in data[1:]]
+            result.append({"operand":operand, "opcode":opcode})
         return result
     
 
