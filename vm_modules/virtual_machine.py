@@ -36,6 +36,8 @@ class VirtualMachine:
             try:
                 # オペランドに応じて実行
                 match operand:
+                    case "":
+                        pass
                     case "push":
                         self.cmd_push(opcode)
                     case "add":
