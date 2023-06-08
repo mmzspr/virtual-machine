@@ -213,6 +213,27 @@ def test_if_dup(capsys):
     virtual_machine.run(text)
     out, err = capsys.readouterr()
     assert out == "1.0\n2.0\n3.0\n4.0\n5.0\n"
+
+# サブルーチン
+def test_subroutine(capsys):
+    text = "push 2\n"\
+           "call 13\n"\
+           "dup\n"\
+           "print\n"\
+           "call 13\n"\
+           "dup\n"\
+           "print\n"\
+           "call \n"\
+           "dup\n"\
+           "print\n"\
+           "exit\n"\
+           "\n"\
+           "dup\n"\
+           "mul\n"\
+           "exit\n"
+    virtual_machine.run(text)
+    out, err = capsys.readouterr()
+    assert out == "2.0\n4.0\n8.0\n"
 # ==============================
 #          複合
 # ==============================
