@@ -21,7 +21,8 @@ class VirtualMachine:
     def __init__(self, text):
         self.lines = text.split("\n") # 改行区切りのリスト
         self.progmem = self._parseLines(self.lines) # パース済み命令リスト
-        self.stack = vm_stack.Stack() # スタック
+        self.data_stack = vm_stack.Stack() # スタック
+        self.return_stack = vm_stack.Stack() # スタック
         self.pc = 0 # プログラムカウンタ
     
     # ===== 実行 =====
@@ -57,8 +58,10 @@ class VirtualMachine:
                         self.cmd_if_less(opcode)
                     case "jump":
                         self.cmd_jump(opcode)
+                    case "call":
+                        self.cmd_call(opcode)
                     case "exit":
-                        return
+                        self.cmd_exit()
                     case _:
                         raise vm_error.Error("ERROR_UNDEFINED_OPCODE")
             except vm_error.Error as e:
@@ -97,49 +100,49 @@ class VirtualMachine:
     def cmd_push(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
-        self.stack.push(opcode[0])
+        self.data_stack.push(opcode[0])
     
     def cmd_add(self):
-        x = self.stack.pop()
-        y = self.stack.pop()
-        self.stack.push(x + y)
+        x = self.data_stack.pop()
+        y = self.data_stack.pop()
+        self.data_stack.push(x + y)
     
     def cmd_sub(self):
-        x = self.stack.pop()
-        y = self.stack.pop()
-        self.stack.push(x - y)
+        x = self.data_stack.pop()
+        y = self.data_stack.pop()
+        self.data_stack.push(x - y)
     
     def cmd_mul(self):
-        x = self.stack.pop()
-        y = self.stack.pop()
-        self.stack.push(x * y)
+        x = self.data_stack.pop()
+        y = self.data_stack.pop()
+        self.data_stack.push(x * y)
 
     def cmd_dup(self):
-        x = self.stack.pop()
-        self.stack.push(x)
-        self.stack.push(x)
+        x = self.data_stack.pop()
+        self.data_stack.push(x)
+        self.data_stack.push(x)
     
     def cmd_if_equal(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
-        x = self.stack.pop()
-        y = self.stack.pop()
+        x = self.data_stack.pop()
+        y = self.data_stack.pop()
         if x == y:
             self.pc = int(opcode[0]) -2
     
     def cmd_if_greater(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
-        x = self.stack.pop()
-        y = self.stack.pop()
+        x = self.data_stack.pop()
+        y = self.data_stack.pop()
         if x > y:
             self.pc = int(opcode[0]) -2
     
     def cmd_if_less(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
-        x = self.stack.pop()
-        y = self.stack.pop()
+        x = self.data_stack.pop()
+        y = self.data_stack.pop()
         if x < y:
             self.pc = int(opcode[0]) -2
     
@@ -149,9 +152,20 @@ class VirtualMachine:
         self.pc = int(opcode[0]) -2
     
     def cmd_print(self):
-        x = self.stack.pop()
+        x = self.data_stack.pop()
         print(x)
     
     def cmd_print_char(self):
-        x = self.stack.pop()
+        x = self.data_stack.pop()
         print(chr(int(x)), end="")
+    
+    def cmd_call(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        self.return_stack.push(self.pc)
+        self.pc = int(opcode[0]) -2
+    
+    def cmd_exit(self):
+        if self.return_stack.is_empty():
+            exit(0)
+        self.pc = self.return_stack.pop()

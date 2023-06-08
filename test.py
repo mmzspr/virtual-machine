@@ -13,9 +13,12 @@ def test_print(capsys):
            "print\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "2.0\n1.0\n"
+    assert exit_info.value.code == 0
 
 # 文字として出力
 def test_print_c(capsys):
@@ -32,9 +35,13 @@ def test_print_c(capsys):
            "print_char\n"\
            "print_char\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
+    print(out)
     assert out == "Hello\n"
+    assert exit_info.value.code == 0
 
 # 加算
 def test_add(capsys):
@@ -43,9 +50,12 @@ def test_add(capsys):
            "add\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "3.0\n"
+    assert exit_info.value.code == 0
 
 
 # 減算
@@ -55,9 +65,12 @@ def test_sub(capsys):
            "sub\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "2.0\n"
+    assert exit_info.value.code == 0
 
 
 # 乗算
@@ -67,9 +80,12 @@ def test_mul(capsys):
            "mul\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "21.0\n"
+    assert exit_info.value.code == 0
 
 # if 3 == 3
 def test_if_equal1(capsys):
@@ -81,9 +97,12 @@ def test_if_equal1(capsys):
            "push 2\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "2.0\n"
+    assert exit_info.value.code == 0
 
 # if 2 == 3
 def test_if_equal2(capsys):
@@ -95,9 +114,12 @@ def test_if_equal2(capsys):
            "push 2\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "1.0\n2.0\n"
+    assert exit_info.value.code == 0
 
 # if 5 > 3
 def test_if_greater1(capsys):
@@ -109,9 +131,12 @@ def test_if_greater1(capsys):
            "push 2\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "2.0\n"
+    assert exit_info.value.code == 0
 
 # if 2 > 3
 def test_if_greater2(capsys):
@@ -123,9 +148,12 @@ def test_if_greater2(capsys):
            "push 2\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "1.0\n2.0\n"
+    assert exit_info.value.code == 0
 
 # if 3 > 3
 def test_if_greater2(capsys):
@@ -137,9 +165,12 @@ def test_if_greater2(capsys):
            "push 2\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "1.0\n2.0\n"
+    assert exit_info.value.code == 0
 
 
 # if 2 < 3
@@ -152,9 +183,12 @@ def test_if_lessr1(capsys):
            "push 2\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "2.0\n"
+    assert exit_info.value.code == 0
 
 # if 5 < 3
 def test_if_less2(capsys):
@@ -166,9 +200,12 @@ def test_if_less2(capsys):
            "push 2\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "1.0\n2.0\n"
+    assert exit_info.value.code == 0
 
 # if 5 < 5
 def test_if_less3(capsys):
@@ -180,9 +217,12 @@ def test_if_less3(capsys):
            "push 2\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "1.0\n2.0\n"
+    assert exit_info.value.code == 0
 
 # ジャンプ
 def test_if_jump(capsys):
@@ -194,9 +234,12 @@ def test_if_jump(capsys):
            "push 3\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "1.0\n3.0\n"
+    assert exit_info.value.code == 0
 
 # コピー
 def test_if_dup(capsys):
@@ -210,9 +253,61 @@ def test_if_dup(capsys):
            "if_equal 10\n"\
            "jump 2\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "1.0\n2.0\n3.0\n4.0\n5.0\n"
+    assert exit_info.value.code == 0
+
+# サブルーチン (スタックの先頭を二乗する)
+def test_subroutine(capsys):
+    text = "push 2\n"\
+           "call 12\n"\
+           "dup\n"\
+           "print\n"\
+           "call 12\n"\
+           "dup\n"\
+           "print\n"\
+           "call 12\n"\
+           "dup\n"\
+           "print\n"\
+           "exit\n"\
+           "dup\n"\
+           "mul\n"\
+           "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+# サブルーチン (多重呼び出し)
+def test_subroutine_multiple_call(capsys):
+    text = "push 1\n"\
+           "call 16\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "exit\n"\
+           "push 3\n"\
+           "call 20\n"\
+           "push 5\n"\
+           "push 6\n"\
+           "exit\n"\
+           "push 2\n"\
+           "call 11\n"\
+           "push 7\n"\
+           "exit\n"\
+           "push 4\n"\
+           "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "7.0\n6.0\n5.0\n4.0\n3.0\n2.0\n1.0\n"
+    assert exit_info.value.code == 0
 # ==============================
 #          複合
 # ==============================
@@ -229,9 +324,12 @@ def test_mix(capsys):
            "sub\n"\
            "print\n"\
            "exit\n"
-    virtual_machine.run(text)
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert out == "-6.0\n"
+    assert exit_info.value.code == 0
 
 
 # ==============================
@@ -247,20 +345,24 @@ def test_error_pop(capsys):
            "add\n"\
            "print\n"\
            "exit\n"
-    with pytest.raises(SystemExit):
+    with pytest.raises(SystemExit) as exit_info:
         virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert err == f"{_color_red}index error (pop from empty): line 2, \"add\"{_color_reset}\n"
+    assert exit_info.value.code == 1
 
 
 # 不明なオペコード
 def test_error_undefined_opcode(capsys):
     text = "aaa 7\n"\
            "exit\n"
-    with pytest.raises(SystemExit):
+    with pytest.raises(SystemExit) as exit_info:
         virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert err == f"{_color_red}syntax error (undefined opcode): line 1, \"aaa 7\"{_color_reset}\n"
+    assert exit_info.value.code == 1
 
 
 # オペランドが不足
@@ -270,10 +372,12 @@ def test_error_missing_operand(capsys):
            "add\n"\
            "print\n"\
            "exit\n"
-    with pytest.raises(SystemExit):
+    with pytest.raises(SystemExit) as exit_info:
         virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert err == f"{_color_red}syntax error (missing operand): line 2, \"push\"{_color_reset}\n"
+    assert exit_info.value.code == 1
 
 
 # プログラムカウンタが範囲外
@@ -281,7 +385,9 @@ def test_error_pc_out_of_range(capsys):
     text = "push -1\n"\
            "push 7\n"\
            "sub\n"
-    with pytest.raises(SystemExit):
+    with pytest.raises(SystemExit) as exit_info:
         virtual_machine.run(text)
+
     out, err = capsys.readouterr()
     assert err == f"{_color_red}index error (program counter out of range): line 4{_color_reset}\n"
+    assert exit_info.value.code == 1
