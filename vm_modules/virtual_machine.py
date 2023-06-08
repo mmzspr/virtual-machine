@@ -1,5 +1,6 @@
 from . import vm_error
 from . import vm_stack
+import re
 
 __all__ = ["run"]
 
@@ -36,6 +37,8 @@ class VirtualMachine:
             try:
                 # オペランドに応じて実行
                 match operand:
+                    case "":
+                        pass
                     case "push":
                         self.cmd_push(opcode)
                     case "add":
@@ -87,9 +90,11 @@ class VirtualMachine:
             lines = lines[:-1]
 
         for line in lines:
-            data = line.split(" ")
-            operand = data[0]
-            opcode = [float(i) for i in data[1:]]
+            line = re.sub(r"#.*","", line) # コメント除去
+            data = line.split()
+
+            operand = data[0] if len(data) else "" # オペランドがあれば取得
+            opcode = [float(x) for x in data[1:] if x != ''] # オペコードがあれば取得
             result.append({"operand":operand, "opcode":opcode})
         return result
     

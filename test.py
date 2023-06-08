@@ -6,6 +6,7 @@ import pytest
 # ==============================
 #          基本操作
 # ==============================
+
 # 出力
 def test_print(capsys):
     text = "push 1\n"\
@@ -13,6 +14,36 @@ def test_print(capsys):
            "print\n"\
            "print\n"\
            "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "2.0\n1.0\n"
+    assert exit_info.value.code == 0
+
+# 改行
+def test_newline(capsys):
+    text = "push 1\n\n"\
+           "push 2\n"\
+           "print\n\n\n"\
+           "print\n"\
+           "exit\n\n\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "2.0\n1.0\n"
+    assert exit_info.value.code == 0
+
+# コメント
+def test_comment(capsys):
+    text = "push 1\n"\
+           "  push   2   # test\n"\
+           "  #    comment\n"\
+           "#\n"\
+           "print\n\n\n"\
+           "print\n"\
+           "exit\n\n\n"
     with pytest.raises(SystemExit) as exit_info:
         virtual_machine.run(text)
 
