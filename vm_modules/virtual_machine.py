@@ -22,6 +22,7 @@ class VirtualMachine:
         self.lines = text.split("\n") # 改行区切りのリスト
         self.progmem = self._parseLines(self.lines) # パース済み命令リスト
         self.data_stack = vm_stack.Stack() # スタック
+        self.return_stack = vm_stack.Stack() # スタック
         self.pc = 0 # プログラムカウンタ
     
     # ===== 実行 =====
