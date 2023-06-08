@@ -199,12 +199,12 @@ def test_if_jump(capsys):
     assert out == "1.0\n3.0\n"
 
 # コピー
-def test_if_copy(capsys):
+def test_if_dup(capsys):
     text = "push 0\n"\
            "push 1\n"\
            "add\n"\
-           "copy\n"\
-           "copy\n"\
+           "dup\n"\
+           "dup\n"\
            "print\n"\
            "push 5\n"\
            "if_equal 10\n"\

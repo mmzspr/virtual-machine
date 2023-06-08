@@ -1,8 +1,8 @@
 push 0
 push 1
 add
-copy
-copy
+dup
+dup
 print
 push 5
 if_equal 10
