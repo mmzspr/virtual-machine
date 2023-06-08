@@ -35,6 +35,22 @@ def test_newline(capsys):
     assert out == "2.0\n1.0\n"
     assert exit_info.value.code == 0
 
+# コメント
+def test_comment(capsys):
+    text = "push 1\n"\
+           "  push   2   # test\n"\
+           "  #    comment\n"\
+           "#\n"\
+           "print\n\n\n"\
+           "print\n"\
+           "exit\n\n\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "2.0\n1.0\n"
+    assert exit_info.value.code == 0
+
 # 文字として出力
 def test_print_c(capsys):
     text = "push 10\n"\
