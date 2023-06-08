@@ -20,18 +20,18 @@ class VirtualMachine:
     # ===== 初期化 =====
     def __init__(self, text):
         self.lines = text.split("\n") # 改行区切りのリスト
-        self.instructions = self._parseLines(self.lines) # パース済み命令リスト
+        self.progmem = self._parseLines(self.lines) # パース済み命令リスト
         self.stack = vm_stack.Stack() # スタック
         self.pc = 0 # プログラムカウンタ
     
     # ===== 実行 =====
     def run(self):
         while True:
-            if self.pc >= len(self.instructions):
+            if self.pc >= len(self.progmem):
                  vm_error.index_error_pc(self.pc + 1)
             
-            operand = self.instructions[self.pc]["operand"]
-            opcode = self.instructions[self.pc]["opcode"]
+            operand = self.progmem[self.pc]["operand"]
+            opcode = self.progmem[self.pc]["opcode"]
             try:
                 # オペランドに応じて実行
                 match operand:
