@@ -260,20 +260,19 @@ def test_if_dup(capsys):
     assert out == "1.0\n2.0\n3.0\n4.0\n5.0\n"
     assert exit_info.value.code == 0
 
-# サブルーチン
+# サブルーチン (スタックの先頭を二乗する)
 def test_subroutine(capsys):
     text = "push 2\n"\
-           "call 13\n"\
+           "call 12\n"\
            "dup\n"\
            "print\n"\
-           "call 13\n"\
+           "call 12\n"\
            "dup\n"\
            "print\n"\
-           "call \n"\
+           "call 12\n"\
            "dup\n"\
            "print\n"\
            "exit\n"\
-           "\n"\
            "dup\n"\
            "mul\n"\
            "exit\n"
@@ -281,7 +280,7 @@ def test_subroutine(capsys):
         virtual_machine.run(text)
 
     out, err = capsys.readouterr()
-    assert out == "2.0\n4.0\n8.0\n"
+    assert out == "4.0\n16.0\n256.0\n"
     assert exit_info.value.code == 0
 # ==============================
 #          複合
@@ -322,7 +321,7 @@ def test_error_pop(capsys):
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
         virtual_machine.run(text)
-        
+
     out, err = capsys.readouterr()
     assert err == f"{_color_red}index error (pop from empty): line 2, \"add\"{_color_reset}\n"
     assert exit_info.value.code == 1
