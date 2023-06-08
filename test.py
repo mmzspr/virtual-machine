@@ -51,6 +51,32 @@ def test_comment(capsys):
     assert out == "2.0\n1.0\n"
     assert exit_info.value.code == 0
 
+# グローバル変数
+def test_print(capsys):
+    text = "push 0\n"\
+           "store_global 0\n"\
+           "push 1\n"\
+           "store_global 1\n"\
+           "push 2\n"\
+           "store_global 2\n"\
+           "push 3\n"\
+           "store_global 3\n"\
+           "load_global 1\n"\
+           "load_global 3\n"\
+           "load_global 0\n"\
+           "load_global 2\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "2.0\n0.0\n3.0\n1.0\n"
+    assert exit_info.value.code == 0
+
 # 文字として出力
 def test_print_c(capsys):
     text = "push 10\n"\
@@ -421,4 +447,18 @@ def test_error_pc_out_of_range(capsys):
 
     out, err = capsys.readouterr()
     assert err == f"{_color_red}index error (program counter out of range): line 4{_color_reset}\n"
+    assert exit_info.value.code == 1
+
+# 定義されていないグローバル変数を参照
+def test_error_undefined_global_variable(capsys):
+    text = "push 1\n"\
+           "store_global 0\n"\
+           "load_global 1\n"\
+           "print\n"\
+           "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert err == f"{_color_red}syntax error (undefined global variable): line 3, \"load_global 1\"{_color_reset}\n"
     assert exit_info.value.code == 1

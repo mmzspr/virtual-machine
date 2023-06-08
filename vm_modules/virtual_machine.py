@@ -1,5 +1,7 @@
 from . import vm_error
 from . import vm_stack
+from . import vm_global_area
+
 import re
 
 __all__ = ["run"]
@@ -25,6 +27,8 @@ class VirtualMachine:
         self.data_stack = vm_stack.Stack() # スタック
         self.return_stack = vm_stack.Stack() # スタック
         self.pc = 0 # プログラムカウンタ
+        self.global_area = vm_global_area.GlobalArea() # グローバル領域
+
     
     # ===== 実行 =====
     def run(self):
@@ -49,6 +53,10 @@ class VirtualMachine:
                         self.cmd_mul()
                     case "dup":
                         self.cmd_dup()
+                    case "store_global":
+                        self.cmd_store_global(opcode)
+                    case "load_global":
+                        self.cmd_load_global(opcode)
                     case "print":
                         self.cmd_print()
                     case "print_char":
@@ -77,6 +85,8 @@ class VirtualMachine:
                         vm_error.syntax_error_missing_operand(n_line, code)
                     case "ERROR_UNDEFINED_OPCODE":
                         vm_error.syntax_error_undefined_opcode(n_line, code)
+                    case "ERROR_LOAD_FROM_EMPTY_GLOBAL_VAR":
+                        vm_error.syntax_error_undefined_global_var(n_line, code)
                     case _:
                         vm_error.unknown_error(n_line, code)
             
@@ -106,6 +116,20 @@ class VirtualMachine:
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.data_stack.push(opcode[0])
+    
+    def cmd_store_global(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        value = self.data_stack.pop()
+        self.global_area.store(name, value)
+    
+    def cmd_load_global(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        value = self.global_area.load(name)
+        self.data_stack.push(value)
     
     def cmd_add(self):
         x = self.data_stack.pop()
