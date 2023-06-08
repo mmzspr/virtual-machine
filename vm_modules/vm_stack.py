@@ -19,3 +19,6 @@ class Stack:
         result = self.items[self.sp]
         self.sp -= 1
         return result
+    
+    def is_empty(self):
+        return self.sp == -1
