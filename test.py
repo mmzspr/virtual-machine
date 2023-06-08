@@ -279,8 +279,34 @@ def test_subroutine(capsys):
     with pytest.raises(SystemExit) as exit_info:
         virtual_machine.run(text)
 
+# サブルーチン (多重呼び出し)
+def test_subroutine_multiple_call(capsys):
+    text = "push 1\n"\
+           "call 16\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "exit\n"\
+           "push 3\n"\
+           "call 20\n"\
+           "push 5\n"\
+           "push 6\n"\
+           "exit\n"\
+           "push 2\n"\
+           "call 11\n"\
+           "push 7\n"\
+           "exit\n"\
+           "push 4\n"\
+           "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
     out, err = capsys.readouterr()
-    assert out == "4.0\n16.0\n256.0\n"
+    assert out == "7.0\n6.0\n5.0\n4.0\n3.0\n2.0\n1.0\n"
     assert exit_info.value.code == 0
 # ==============================
 #          複合
