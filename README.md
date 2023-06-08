@@ -8,7 +8,7 @@ Pythonで実装した仮想スタックマシン
 | add | スタックから2つpopして，加算した結果をpush |
 | sub | スタックから2つpopして，減算した結果をpush |
 | mul | スタックから2つpopして，乗算した結果をpush |
-| copy | スタックから1つpopして，2回push |
+| dup | スタックから1つpopして，2回push |
 | print | スタックから1つpopして，画面に出力 |
 | print_char | スタックから1つpopして，文字(ASCII)で画面に出力 |
 | if_equal n|スタックから2つpopして，比較演算(==)が真であればn行目へジャンプ|

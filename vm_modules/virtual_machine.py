@@ -43,8 +43,8 @@ class VirtualMachine:
                         self.cmd_sub()
                     case "mul":
                         self.cmd_mul()
-                    case "copy":
-                        self.cmd_copy()
+                    case "dup":
+                        self.cmd_dup()
                     case "print":
                         self.cmd_print()
                     case "print_char":
@@ -114,7 +114,7 @@ class VirtualMachine:
         y = self.stack.pop()
         self.stack.push(x * y)
 
-    def cmd_copy(self):
+    def cmd_dup(self):
         x = self.stack.pop()
         self.stack.push(x)
         self.stack.push(x)
