@@ -58,8 +58,10 @@ class VirtualMachine:
                         self.cmd_if_less(opcode)
                     case "jump":
                         self.cmd_jump(opcode)
+                    case "call":
+                        self.cmd_call(opcode)
                     case "exit":
-                        return
+                        self.cmd_exit()
                     case _:
                         raise vm_error.Error("ERROR_UNDEFINED_OPCODE")
             except vm_error.Error as e:
@@ -156,3 +158,14 @@ class VirtualMachine:
     def cmd_print_char(self):
         x = self.data_stack.pop()
         print(chr(int(x)), end="")
+    
+    def cmd_call(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        self.return_stack.push(self.pc)
+        self.pc = int(opcode[0]) -2
+    
+    def cmd_exit(self):
+        if self.return_stack.is_empty():
+            exit(0)
+        self.pc = self.return_stack.pop()
