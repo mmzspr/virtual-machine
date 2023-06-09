@@ -57,6 +57,8 @@ class VirtualMachine:
                         self.cmd_sub()
                     case "mul":
                         self.cmd_mul()
+                    case "div":
+                        self.cmd_div()
                     case "dup":
                         self.cmd_dup()
                     case "store_global":
@@ -167,6 +169,11 @@ class VirtualMachine:
         y = self.data_stack.pop()
         self.data_stack.push(x * y)
 
+    def cmd_div(self):
+        x = self.data_stack.pop()
+        y = self.data_stack.pop()
+        self.data_stack.push(x / y)
+    
     def cmd_dup(self):
         x = self.data_stack.pop()
         self.data_stack.push(x)
