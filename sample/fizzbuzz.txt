@@ -1,0 +1,119 @@
+jump 52
+
+# ==== サブルーチン (is x0 divisible by x1, ※x1とx2は自然数) =====
+store_local 0 # [x1]
+store_local 1 # []
+# ループ開始
+load_local 1  # [x1]
+load_local 0  # [x1 x0]
+sub           # [x0-x1]
+store_local 0 # []
+load_local 0  # [x0-x1]
+push 0        # [x0-x1 0]
+if_equal 20   # retrun 1 , []
+load_local 1  # [x1]
+load_local 0  # [x1 x0-x1]
+if_less 23    # retrun 0
+jump 7
+
+# return 1
+push 1
+exit
+
+# return 0
+push 0
+exit
+
+# ==== サブルーチン "Fizz" =====
+push 122
+push 122
+push 105
+push 70
+print_char
+print_char
+print_char
+print_char
+exit
+
+# ==== サブルーチン "Buzz" =====
+push 122
+push 122
+push 117
+push 66
+print_char
+print_char
+print_char
+print_char
+exit
+
+# ===============
+#      main
+# ===============
+# x = 0
+push 0
+store_local 0
+
+# === ループ開始 === 
+# x += 1
+load_local 0
+push 1
+add
+store_local 0
+
+# is divisible by 15
+push 15
+load_local 0
+call 4
+push 1
+if_equal 72 # call Fizz Buzz
+jump 79
+
+# call Fizz Buzz
+call 28
+call 39
+push 10
+print_char
+jump 112
+
+# is divisible by 3
+push 3
+load_local 0
+call 4
+push 1
+if_equal 87 # call Fizz Buzz
+jump 93
+
+# call Fizz
+call 28
+push 10
+print_char
+jump 112
+
+# is divisible by 5
+push 5
+load_local 0
+call 4
+push 1
+if_equal 101 # call Fizz Buzz
+jump 107
+
+# call Buzz:
+call 39
+push 10
+print_char
+jump 112
+
+# print number
+load_local 0
+print
+jump 112
+
+# after output
+load_local 0
+push 30
+if_equal 118 # exit
+jump 58
+
+# exit
+exit
+
