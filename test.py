@@ -118,6 +118,20 @@ def test_mul(capsys):
     assert out == "21.0\n"
     assert exit_info.value.code == 0
 
+# 除算
+def test_div(capsys):
+    text = "push 2\n"\
+           "push 10\n"\
+           "div\n"\
+           "print\n"\
+           "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "5.0\n"
+    assert exit_info.value.code == 0
+
 # if 3 == 3
 def test_if_equal1(capsys):
     text = "push 3\n"\

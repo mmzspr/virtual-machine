@@ -18,6 +18,7 @@ pytest test.py -v
 | add | スタックから2つpopして，加算した結果をpush |
 | sub | スタックから2つpopして，減算した結果をpush |
 | mul | スタックから2つpopして，乗算した結果をpush |
+| div | スタックから2つpopして，除算した結果をpush |
 | dup | スタックから1つpopして，2回push |
 | store_global n| スタックから1つポップして，グローバル変数nに格納 |
 | load_global n | グローバル変数nの値をスタックにプッシュ |
