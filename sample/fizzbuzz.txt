@@ -1,4 +1,6 @@
-jump 52
+push 15      # 実行回数
+store_local 1
+jump 54
 
 # ==== サブルーチン (is x0 divisible by x1, ※x1とx2は自然数) =====
 store_local 0 # [x1]
@@ -10,11 +12,11 @@ sub           # [x0-x1]
 store_local 0 # []
 load_local 0  # [x0-x1]
 push 0        # [x0-x1 0]
-if_equal 20   # retrun 1 , []
+if_equal 22   # retrun 1 , []
 load_local 1  # [x1]
 load_local 0  # [x1 x0-x1]
-if_less 23    # retrun 0
-jump 7
+if_less 25    # retrun 0
+jump 9
 
 # return 1
 push 1
@@ -63,56 +65,56 @@ store_local 0
 # is divisible by 15
 push 15
 load_local 0
-call 4
+call 6
 push 1
-if_equal 72 # call Fizz Buzz
-jump 79
+if_equal 74 # call Fizz Buzz
+jump 81
 
 # call Fizz Buzz
-call 28
-call 39
+call 30
+call 41
 push 10
 print_char
-jump 112
+jump 114
 
 # is divisible by 3
 push 3
 load_local 0
-call 4
+call 6
 push 1
-if_equal 87 # call Fizz Buzz
-jump 93
+if_equal 89 # call Fizz Buzz
+jump 95
 
 # call Fizz
-call 28
+call 30
 push 10
 print_char
-jump 112
+jump 114
 
 # is divisible by 5
 push 5
 load_local 0
-call 4
+call 6
 push 1
-if_equal 101 # call Fizz Buzz
-jump 107
+if_equal 103 # call Fizz Buzz
+jump 109
 
 # call Buzz:
-call 39
+call 41
 push 10
 print_char
-jump 112
+jump 114
 
 # print number
 load_local 0
 print
-jump 112
+jump 114
 
 # after output
 load_local 0
-push 30
-if_equal 118 # exit
-jump 58
+load_local 1
+if_equal 120 # exit
+jump 60
 
 # exit
 exit
