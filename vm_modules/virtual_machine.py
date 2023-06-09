@@ -1,7 +1,6 @@
 from . import vm_error
 from . import vm_stack
-from . import vm_global_area
-
+from . import vm_address_space
 import re
 
 __all__ = ["run"]
@@ -25,14 +24,21 @@ class VirtualMachine:
         self.lines = text.split("\n") # 改行区切りのリスト
         self.progmem = self._parseLines(self.lines) # パース済み命令リスト
         self.data_stack = vm_stack.Stack() # スタック
-        self.return_stack = vm_stack.Stack() # スタック
-        self.pc = 0 # プログラムカウンタ
-        self.global_area = vm_global_area.GlobalArea() # グローバル領域
+        self.return_stack = vm_stack.Stack() # リターンスタック
+
+        self.pc = -1 # プログラムカウンタ
+        self.local_area_stack = vm_stack.Stack() # ローカル変数領域のスタック
+        self.local_area = vm_address_space.AddressSpace() # ローカル変数領域
+        self.global_area = vm_address_space.AddressSpace() # グローバル変数領域
 
     
     # ===== 実行 =====
     def run(self):
+        
         while True:
+            # プログラムカウンタを進める
+            self.pc+=1
+
             if self.pc >= len(self.progmem):
                  vm_error.index_error_pc(self.pc + 1)
             
@@ -57,6 +63,10 @@ class VirtualMachine:
                         self.cmd_store_global(opcode)
                     case "load_global":
                         self.cmd_load_global(opcode)
+                    case "store_local":
+                        self.cmd_store_local(opcode)
+                    case "load_local":
+                        self.cmd_load_local(opcode)
                     case "print":
                         self.cmd_print()
                     case "print_char":
@@ -85,13 +95,10 @@ class VirtualMachine:
                         vm_error.syntax_error_missing_operand(n_line, code)
                     case "ERROR_UNDEFINED_OPCODE":
                         vm_error.syntax_error_undefined_opcode(n_line, code)
-                    case "ERROR_LOAD_FROM_EMPTY_GLOBAL_VAR":
-                        vm_error.syntax_error_undefined_global_var(n_line, code)
+                    case "ERROR_LUNDEFINED_VAR":
+                        vm_error.syntax_error_undefined_var(n_line, code)
                     case _:
                         vm_error.unknown_error(n_line, code)
-            
-            # プログラムカウンタを進める
-            self.pc+=1
     
     # ===== 構文解析 =====
     def _parseLines(self, lines):
@@ -129,6 +136,20 @@ class VirtualMachine:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         value = self.global_area.load(name)
+        self.data_stack.push(value)
+    
+    def cmd_store_local(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        value = self.data_stack.pop()
+        self.local_area.store(name, value)
+    
+    def cmd_load_local(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        value = self.local_area.load(name)
         self.data_stack.push(value)
     
     def cmd_add(self):
@@ -191,10 +212,18 @@ class VirtualMachine:
     def cmd_call(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
+        
+        # メモリ領域確保
+        self.local_area_stack.push(self.local_area)
+        self.local_area = vm_address_space.AddressSpace()
+        # プログラムカウンタ変更
         self.return_stack.push(self.pc)
         self.pc = int(opcode[0]) -2
     
     def cmd_exit(self):
         if self.return_stack.is_empty():
             exit(0)
+        # 呼び出し前のメモリ領域に戻す
+        self.local_area = self.local_area_stack.pop()
+        # プログラムカウンタを戻す
         self.pc = self.return_stack.pop()

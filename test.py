@@ -51,32 +51,6 @@ def test_comment(capsys):
     assert out == "2.0\n1.0\n"
     assert exit_info.value.code == 0
 
-# グローバル変数
-def test_print(capsys):
-    text = "push 0\n"\
-           "store_global 0\n"\
-           "push 1\n"\
-           "store_global 1\n"\
-           "push 2\n"\
-           "store_global 2\n"\
-           "push 3\n"\
-           "store_global 3\n"\
-           "load_global 1\n"\
-           "load_global 3\n"\
-           "load_global 0\n"\
-           "load_global 2\n"\
-           "print\n"\
-           "print\n"\
-           "print\n"\
-           "print\n"\
-           "exit\n"
-    with pytest.raises(SystemExit) as exit_info:
-        virtual_machine.run(text)
-
-    out, err = capsys.readouterr()
-    assert out == "2.0\n0.0\n3.0\n1.0\n"
-    assert exit_info.value.code == 0
-
 # 文字として出力
 def test_print_c(capsys):
     text = "push 10\n"\
@@ -365,6 +339,69 @@ def test_subroutine_multiple_call(capsys):
     out, err = capsys.readouterr()
     assert out == "7.0\n6.0\n5.0\n4.0\n3.0\n2.0\n1.0\n"
     assert exit_info.value.code == 0
+
+# グローバル変数
+def test_print(capsys):
+    text = "push 0\n"\
+           "store_global 0\n"\
+           "push 1\n"\
+           "store_global 1\n"\
+           "push 2\n"\
+           "store_global 2\n"\
+           "push 3\n"\
+           "store_global 3\n"\
+           "load_global 1\n"\
+           "load_global 3\n"\
+           "load_global 0\n"\
+           "load_global 2\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "2.0\n0.0\n3.0\n1.0\n"
+    assert exit_info.value.code == 0
+
+# ローカル変数
+def test_local(capsys):
+    text = "push 0\n"\
+           "push 1\n"\
+           "store_local 0\n"\
+           "store_local 1\n"\
+           "call 20\n"\
+           "load_local 1\n"\
+           "load_local 0\n"\
+           "print\n"\
+           "print\n"\
+           "exit\n"\
+           "\n"\
+           "# === 12行目 === \n"\
+           "push 3\n"\
+           "push 4\n"\
+           "store_local 1\n"\
+           "store_local 0\n"\
+           "exit\n"\
+           "\n"\
+           "# === 19行目 ===\n"\
+           "push 2\n"\
+           "store_local 0\n"\
+           "call 13\n"\
+           "load_local 0\n"\
+           "print\n"\
+           "exit\n"\
+           
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "2.0\n1.0\n0.0\n"
+    assert exit_info.value.code == 0
+
+
 # ==============================
 #          複合
 # ==============================
@@ -460,5 +497,23 @@ def test_error_undefined_global_variable(capsys):
         virtual_machine.run(text)
 
     out, err = capsys.readouterr()
-    assert err == f"{_color_red}syntax error (undefined global variable): line 3, \"load_global 1\"{_color_reset}\n"
+    assert err == f"{_color_red}syntax error (undefined variable): line 3, \"load_global 1\"{_color_reset}\n"
+    assert exit_info.value.code == 1
+
+# 定義されていないローカル変数を参照
+def test_error_undefined_local_variable(capsys):
+    text = "push 1\n"\
+           "store_local 0\n"\
+           "call 7\n"\
+           "exit\n"\
+           "\n"\
+           "# === 6行目 ===\n"\
+           "load_local 0\n"\
+           "print\n"\
+           "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert err == f"{_color_red}syntax error (undefined variable): line 7, \"load_local 0\"{_color_reset}\n"
     assert exit_info.value.code == 1

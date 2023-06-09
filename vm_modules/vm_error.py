@@ -24,9 +24,9 @@ def syntax_error_undefined_opcode(n_line, code):
 def syntax_error_missing_operand(n_line, code):
     _error(f"syntax error (missing operand): line {n_line}, \"{code}\"")
 
-# 宣言されていないグローバル変数を参照
-def syntax_error_undefined_global_var(n_line, code):
-    _error(f"syntax error (undefined global variable): line {n_line}, \"{code}\"")
+# 宣言されていない変数を参照
+def syntax_error_undefined_var(n_line, code):
+    _error(f"syntax error (undefined variable): line {n_line}, \"{code}\"")
 
 # 空のスタックからpop
 def index_error_pop(n_line, code):

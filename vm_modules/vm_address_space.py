@@ -1,6 +1,6 @@
 from . import vm_error
 
-class GlobalArea:
+class AddressSpace:
     def __init__(self):
         self.items = {}
     
@@ -9,7 +9,7 @@ class GlobalArea:
     
     def load(self, name):
         if name not in self.items:
-            raise vm_error.Error("ERROR_LOAD_FROM_EMPTY_GLOBAL_VAR")
+            raise vm_error.Error("ERROR_LUNDEFINED_VAR")
         
         return self.items[name]
 
