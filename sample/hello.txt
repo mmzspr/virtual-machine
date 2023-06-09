@@ -1,13 +1,13 @@
-push 10
-push 111
-push 108
-push 108
-push 101
-push 72
-print_char
-print_char
-print_char
-print_char
-print_char
-print_char
+push 10  # \n
+push 111 # o
+push 108 # l
+push 108 # l
+push 101 # e
+push 72  # H
+print_char # H
+print_char # e
+print_char # l
+print_char # l
+print_char # o
+print_char # \n
 exit

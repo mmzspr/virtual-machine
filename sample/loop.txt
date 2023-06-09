@@ -1,10 +1,13 @@
-push 0
-push 1
-add
-dup
-dup
-print
+# 1~5までを出力するプログラム
+push 0  # x = 0
+# ループ開始
+push 1  
+add     # x += 1
+dup     # xを複製
+dup     # xを複製
+print   # xを出力
+# if x == 5 then exit else goto 2
 push 5
-if_equal 10
-jump 2
+if_equal 13
+jump 4
 exit
