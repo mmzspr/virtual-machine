@@ -1,4 +1,4 @@
-push 15      # 実行回数
+push 1000      # 実行回数
 store_local 1
 jump 54
 

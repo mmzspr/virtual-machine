@@ -2,9 +2,9 @@ from . import vm_error
 from . import vm_stack
 from . import vm_address_space
 import re
+import time
 
 __all__ = ["run"]
-
 
 # ==============================
 #     バーチャルマシン実行
@@ -30,11 +30,12 @@ class VirtualMachine:
         self.local_area_stack = vm_stack.Stack() # ローカル変数領域のスタック
         self.local_area = vm_address_space.AddressSpace() # ローカル変数領域
         self.global_area = vm_address_space.AddressSpace() # グローバル変数領域
+        self.time = 0
 
     
     # ===== 実行 =====
     def run(self):
-        
+        self.time = time.time()
         while True:
             # プログラムカウンタを進める
             self.pc+=1
@@ -229,6 +230,7 @@ class VirtualMachine:
     
     def cmd_exit(self):
         if self.return_stack.is_empty():
+            print(time.time()-self.time)
             exit(0)
         # 呼び出し前のメモリ領域に戻す
         self.local_area = self.local_area_stack.pop()
