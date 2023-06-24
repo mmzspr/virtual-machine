@@ -7,10 +7,26 @@ import pytest
 #          基本操作
 # ==============================
 
+# 型
+def test_type(capsys):
+    text = "push_float 1.5\n"\
+           "push_int 2\n"\
+           "push_char 65\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "exit\n"
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "A\n2\n1.5\n"
+    assert exit_info.value.code == 0
+
 # 出力
 def test_print(capsys):
-    text = "push 1\n"\
-           "push 2\n"\
+    text = "push_float 1\n"\
+           "push_float 2\n"\
            "print\n"\
            "print\n"\
            "exit\n"
@@ -23,8 +39,8 @@ def test_print(capsys):
 
 # 改行
 def test_newline(capsys):
-    text = "push 1\n\n"\
-           "push 2\n"\
+    text = "push_float 1\n\n"\
+           "push_float 2\n"\
            "print\n\n\n"\
            "print\n"\
            "exit\n\n\n"
@@ -37,8 +53,8 @@ def test_newline(capsys):
 
 # コメント
 def test_comment(capsys):
-    text = "push 1\n"\
-           "  push   2   # test\n"\
+    text = "push_float 1\n"\
+           "  push_float   2   # test\n"\
            "  #    comment\n"\
            "#\n"\
            "print\n\n\n"\
@@ -53,12 +69,12 @@ def test_comment(capsys):
 
 # 文字として出力
 def test_print_c(capsys):
-    text = "push 10\n"\
-           "push 111\n"\
-           "push 108\n"\
-           "push 108\n"\
-           "push 101\n"\
-           "push 72\n"\
+    text = "push_float 10\n"\
+           "push_float 111\n"\
+           "push_float 108\n"\
+           "push_float 108\n"\
+           "push_float 101\n"\
+           "push_float 72\n"\
            "print_char\n"\
            "print_char\n"\
            "print_char\n"\
@@ -76,8 +92,8 @@ def test_print_c(capsys):
 
 # 加算
 def test_add(capsys):
-    text = "push 1\n"\
-           "push 2\n"\
+    text = "push_float 1\n"\
+           "push_float 2\n"\
            "add\n"\
            "print\n"\
            "exit\n"
@@ -91,8 +107,8 @@ def test_add(capsys):
 
 # 減算
 def test_sub(capsys):
-    text = "push 3\n"\
-           "push 5\n"\
+    text = "push_float 3\n"\
+           "push_float 5\n"\
            "sub\n"\
            "print\n"\
            "exit\n"
@@ -106,8 +122,8 @@ def test_sub(capsys):
 
 # 乗算
 def test_mul(capsys):
-    text = "push 7\n"\
-           "push 3\n"\
+    text = "push_float 7\n"\
+           "push_float 3\n"\
            "mul\n"\
            "print\n"\
            "exit\n"
@@ -120,8 +136,8 @@ def test_mul(capsys):
 
 # 除算
 def test_div(capsys):
-    text = "push 2\n"\
-           "push 10\n"\
+    text = "push_float 2\n"\
+           "push_float 10\n"\
            "div\n"\
            "print\n"\
            "exit\n"
@@ -134,12 +150,12 @@ def test_div(capsys):
 
 # if 3 == 3
 def test_if_equal1(capsys):
-    text = "push 3\n"\
-           "push 3\n"\
+    text = "push_float 3\n"\
+           "push_float 3\n"\
            "if_equal 6\n"\
-           "push 1\n"\
+           "push_float 1\n"\
            "print\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "print\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
@@ -151,12 +167,12 @@ def test_if_equal1(capsys):
 
 # if 2 == 3
 def test_if_equal2(capsys):
-    text = "push 2\n"\
-           "push 3\n"\
+    text = "push_float 2\n"\
+           "push_float 3\n"\
            "if_equal 6\n"\
-           "push 1\n"\
+           "push_float 1\n"\
            "print\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "print\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
@@ -168,12 +184,12 @@ def test_if_equal2(capsys):
 
 # if 5 > 3
 def test_if_greater1(capsys):
-    text = "push 3\n"\
-           "push 5\n"\
+    text = "push_float 3\n"\
+           "push_float 5\n"\
            "if_greater 6\n"\
-           "push 1\n"\
+           "push_float 1\n"\
            "print\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "print\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
@@ -185,12 +201,12 @@ def test_if_greater1(capsys):
 
 # if 2 > 3
 def test_if_greater2(capsys):
-    text = "push 3\n"\
-           "push 2\n"\
+    text = "push_float 3\n"\
+           "push_float 2\n"\
            "if_greater 6\n"\
-           "push 1\n"\
+           "push_float 1\n"\
            "print\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "print\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
@@ -202,12 +218,12 @@ def test_if_greater2(capsys):
 
 # if 3 > 3
 def test_if_greater2(capsys):
-    text = "push 3\n"\
-           "push 3\n"\
+    text = "push_float 3\n"\
+           "push_float 3\n"\
            "if_greater 6\n"\
-           "push 1\n"\
+           "push_float 1\n"\
            "print\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "print\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
@@ -220,12 +236,12 @@ def test_if_greater2(capsys):
 
 # if 2 < 3
 def test_if_lessr1(capsys):
-    text = "push 3\n"\
-           "push 2\n"\
+    text = "push_float 3\n"\
+           "push_float 2\n"\
            "if_less 6\n"\
-           "push 1\n"\
+           "push_float 1\n"\
            "print\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "print\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
@@ -237,12 +253,12 @@ def test_if_lessr1(capsys):
 
 # if 5 < 3
 def test_if_less2(capsys):
-    text = "push 3\n"\
-           "push 5\n"\
+    text = "push_float 3\n"\
+           "push_float 5\n"\
            "if_less 6\n"\
-           "push 1\n"\
+           "push_float 1\n"\
            "print\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "print\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
@@ -254,12 +270,12 @@ def test_if_less2(capsys):
 
 # if 5 < 5
 def test_if_less3(capsys):
-    text = "push 5\n"\
-           "push 5\n"\
+    text = "push_float 5\n"\
+           "push_float 5\n"\
            "if_less 6\n"\
-           "push 1\n"\
+           "push_float 1\n"\
            "print\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "print\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
@@ -271,12 +287,12 @@ def test_if_less3(capsys):
 
 # ジャンプ
 def test_if_jump(capsys):
-    text = "push 1\n"\
+    text = "push_float 1\n"\
            "print\n"\
            "jump 6\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "print\n"\
-           "push 3\n"\
+           "push_float 3\n"\
            "print\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
@@ -288,13 +304,13 @@ def test_if_jump(capsys):
 
 # コピー
 def test_if_dup(capsys):
-    text = "push 0\n"\
-           "push 1\n"\
+    text = "push_float 0\n"\
+           "push_float 1\n"\
            "add\n"\
            "dup\n"\
            "dup\n"\
            "print\n"\
-           "push 5\n"\
+           "push_float 5\n"\
            "if_equal 10\n"\
            "jump 2\n"\
            "exit\n"
@@ -307,7 +323,7 @@ def test_if_dup(capsys):
 
 # サブルーチン (スタックの先頭を二乗する)
 def test_subroutine(capsys):
-    text = "push 2\n"\
+    text = "push_float 2\n"\
            "call 12\n"\
            "dup\n"\
            "print\n"\
@@ -326,7 +342,7 @@ def test_subroutine(capsys):
 
 # サブルーチン (多重呼び出し)
 def test_subroutine_multiple_call(capsys):
-    text = "push 1\n"\
+    text = "push_float 1\n"\
            "call 16\n"\
            "print\n"\
            "print\n"\
@@ -336,16 +352,16 @@ def test_subroutine_multiple_call(capsys):
            "print\n"\
            "print\n"\
            "exit\n"\
-           "push 3\n"\
+           "push_float 3\n"\
            "call 20\n"\
-           "push 5\n"\
-           "push 6\n"\
+           "push_float 5\n"\
+           "push_float 6\n"\
            "exit\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "call 11\n"\
-           "push 7\n"\
+           "push_float 7\n"\
            "exit\n"\
-           "push 4\n"\
+           "push_float 4\n"\
            "exit\n"
     with pytest.raises(SystemExit) as exit_info:
         virtual_machine.run(text)
@@ -356,13 +372,13 @@ def test_subroutine_multiple_call(capsys):
 
 # グローバル変数
 def test_print(capsys):
-    text = "push 0\n"\
+    text = "push_float 0\n"\
            "store_global 0\n"\
-           "push 1\n"\
+           "push_float 1\n"\
            "store_global 1\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "store_global 2\n"\
-           "push 3\n"\
+           "push_float 3\n"\
            "store_global 3\n"\
            "load_global 1\n"\
            "load_global 3\n"\
@@ -382,8 +398,8 @@ def test_print(capsys):
 
 # ローカル変数
 def test_local(capsys):
-    text = "push 0\n"\
-           "push 1\n"\
+    text = "push_float 0\n"\
+           "push_float 1\n"\
            "store_local 0\n"\
            "store_local 1\n"\
            "call 20\n"\
@@ -394,14 +410,14 @@ def test_local(capsys):
            "exit\n"\
            "\n"\
            "# === 12行目 === \n"\
-           "push 3\n"\
-           "push 4\n"\
+           "push_float 3\n"\
+           "push_float 4\n"\
            "store_local 1\n"\
            "store_local 0\n"\
            "exit\n"\
            "\n"\
            "# === 19行目 ===\n"\
-           "push 2\n"\
+           "push_float 2\n"\
            "store_local 0\n"\
            "call 13\n"\
            "load_local 0\n"\
@@ -420,14 +436,14 @@ def test_local(capsys):
 #          複合
 # ==============================
 
-# push[-2] -> push[-2, 3] -> push[-2, 3, 5] -> add[-2, 8]
-# -> push[-2, 8, -1] -> mul[-2, -8] -> sub[-6] -> print[]
+# push_float[-2] -> push_float[-2, 3] -> push_float[-2, 3, 5] -> add[-2, 8]
+# -> push_float[-2, 8, -1] -> mul[-2, -8] -> sub[-6] -> print[]
 def test_mix(capsys):
-    text = "push -2\n"\
-           "push 3\n"\
-           "push 5\n"\
+    text = "push_float -2\n"\
+           "push_float 3\n"\
+           "push_float 5\n"\
            "add\n"\
-           "push -1\n"\
+           "push_float -1\n"\
            "mul\n"\
            "sub\n"\
            "print\n"\
@@ -449,7 +465,7 @@ _color_reset = "\033[0m"
 
 # 空のスタックからpop
 def test_error_pop(capsys):
-    text = "push 7\n"\
+    text = "push_float 7\n"\
            "add\n"\
            "print\n"\
            "exit\n"
@@ -475,8 +491,8 @@ def test_error_undefined_opcode(capsys):
 
 # オペランドが不足
 def test_error_missing_operand(capsys):
-    text = "push 1\n"\
-           "push\n"\
+    text = "push_float 1\n"\
+           "push_float\n"\
            "add\n"\
            "print\n"\
            "exit\n"
@@ -484,14 +500,14 @@ def test_error_missing_operand(capsys):
         virtual_machine.run(text)
 
     out, err = capsys.readouterr()
-    assert err == f"{_color_red}syntax error (missing operand): line 2, \"push\"{_color_reset}\n"
+    assert err == f"{_color_red}syntax error (missing operand): line 2, \"push_float\"{_color_reset}\n"
     assert exit_info.value.code == 1
 
 
 # プログラムカウンタが範囲外
 def test_error_pc_out_of_range(capsys):
-    text = "push -1\n"\
-           "push 7\n"\
+    text = "push_float -1\n"\
+           "push_float 7\n"\
            "sub\n"
     with pytest.raises(SystemExit) as exit_info:
         virtual_machine.run(text)
@@ -502,7 +518,7 @@ def test_error_pc_out_of_range(capsys):
 
 # 定義されていないグローバル変数を参照
 def test_error_undefined_global_variable(capsys):
-    text = "push 1\n"\
+    text = "push_float 1\n"\
            "store_global 0\n"\
            "load_global 1\n"\
            "print\n"\
@@ -516,7 +532,7 @@ def test_error_undefined_global_variable(capsys):
 
 # 定義されていないローカル変数を参照
 def test_error_undefined_local_variable(capsys):
-    text = "push 1\n"\
+    text = "push_float 1\n"\
            "store_local 0\n"\
            "call 7\n"\
            "exit\n"\

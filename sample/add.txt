@@ -1,6 +1,6 @@
 # 3 + (-2) = 1
-push -2
-push 3
+push_float -2
+push_float 3
 add
 print
 exit

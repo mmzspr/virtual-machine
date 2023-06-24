@@ -1,4 +1,4 @@
-push 1000      # 実行回数
+push_float 1000      # 実行回数
 store_local 1
 jump 54
 
@@ -11,7 +11,7 @@ load_local 0  # [x1 x0]
 sub           # [x0-x1]
 store_local 0 # []
 load_local 0  # [x0-x1]
-push 0        # [x0-x1 0]
+push_float 0        # [x0-x1 0]
 if_equal 22   # retrun 1 , []
 load_local 1  # [x1]
 load_local 0  # [x1 x0-x1]
@@ -19,18 +19,18 @@ if_less 25    # retrun 0
 jump 9
 
 # return 1
-push 1
+push_float 1
 exit
 
 # return 0
-push 0
+push_float 0
 exit
 
 # ==== サブルーチン "Fizz" =====
-push 122
-push 122
-push 105
-push 70
+push_float 122
+push_float 122
+push_float 105
+push_float 70
 print_char
 print_char
 print_char
@@ -38,10 +38,10 @@ print_char
 exit
 
 # ==== サブルーチン "Buzz" =====
-push 122
-push 122
-push 117
-push 66
+push_float 122
+push_float 122
+push_float 117
+push_float 66
 print_char
 print_char
 print_char
@@ -52,56 +52,56 @@ exit
 #      main
 # ===============
 # x = 0
-push 0
+push_float 0
 store_local 0
 
 # === ループ開始 === 
 # x += 1
 load_local 0
-push 1
+push_float 1
 add
 store_local 0
 
 # is divisible by 15
-push 15
+push_float 15
 load_local 0
 call 6
-push 1
+push_float 1
 if_equal 74 # call Fizz Buzz
 jump 81
 
 # call Fizz Buzz
 call 30
 call 41
-push 10
+push_float 10
 print_char
 jump 114
 
 # is divisible by 3
-push 3
+push_float 3
 load_local 0
 call 6
-push 1
+push_float 1
 if_equal 89 # call Fizz Buzz
 jump 95
 
 # call Fizz
 call 30
-push 10
+push_float 10
 print_char
 jump 114
 
 # is divisible by 5
-push 5
+push_float 5
 load_local 0
 call 6
-push 1
+push_float 1
 if_equal 103 # call Fizz Buzz
 jump 109
 
 # call Buzz:
 call 41
-push 10
+push_float 10
 print_char
 jump 114
 

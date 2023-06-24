@@ -1,9 +1,9 @@
-push 10  # \n
-push 111 # o
-push 108 # l
-push 108 # l
-push 101 # e
-push 72  # H
+push_float 10  # \n
+push_float 111 # o
+push_float 108 # l
+push_float 108 # l
+push_float 101 # e
+push_float 72  # H
 print_char # H
 print_char # e
 print_char # l
