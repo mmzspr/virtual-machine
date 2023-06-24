@@ -1,6 +1,7 @@
 from . import vm_error
 from . import vm_stack
 from . import vm_address_space
+from . import vm_array
 import re
 import time
 
@@ -74,6 +75,20 @@ class VirtualMachine:
                         self.cmd_store_local(opcode)
                     case "load_local":
                         self.cmd_load_local(opcode)
+                    case "new_array_int":
+                        self.cmd_new_array_int(opcode)
+                    case "new_array_float":
+                        self.cmd_new_array_float(opcode)
+                    case "new_array_char":
+                        self.cmd_new_array_char(opcode)
+                    case "store_local_array":
+                        self.cmd_store_local_array(opcode)
+                    case "store_global_array":
+                        self.cmd_store_global_array(opcode)
+                    case "load_local_array":
+                        self.cmd_load_local_array(opcode)
+                    case "load_global_array":
+                        self.cmd_load_global_array(opcode)
                     case "print":
                         self.cmd_print()
                     case "print_char":
@@ -140,6 +155,53 @@ class VirtualMachine:
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.data_stack.push(chr(int(opcode[0])))
+    
+    def cmd_new_array_int(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        self.data_stack.push(vm_array.Array("int", int(opcode[0])))
+    
+    def cmd_new_array_float(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        self.data_stack.push(vm_array.Array("float", int(opcode[0])))
+    
+    def cmd_new_array_char(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        self.data_stack.push(vm_array.Array("str", int(opcode[0])))
+    
+    def cmd_store_global_array(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        index = self.data_stack.pop()
+        value = self.data_stack.pop()
+        self.global_area.store_array(name, index, value)
+    
+    def cmd_store_local_array(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        index = self.data_stack.pop()
+        value = self.data_stack.pop()
+        self.local_area.store_array(name, index, value)
+    
+    def cmd_load_global_array(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        index = self.data_stack.pop()
+        value = self.global_area.load_array(name, index)
+        self.data_stack.push(value)
+    
+    def cmd_load_local_array(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        index = self.data_stack.pop()
+        value = self.local_area.load_array(name, index)
+        self.data_stack.push(value)
     
     def cmd_store_global(self, opcode):
         if len(opcode) == 0:

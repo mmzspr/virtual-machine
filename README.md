@@ -14,18 +14,25 @@ pytest test.py -v
 # 命令セット
 | 命令 | 説明 |
 |------|------|
-|push_int n| スタックにnをpush |
-|push_float n| スタックにnをpush |
-|push_char n| スタックにnをpush |
+|push_int n| スタックに整数型nをpush |
+|push_float n| スタックに実数型nをpush |
+|push_char n| スタックに文字型nをpush |
 | add | スタックから2つpopして，加算した結果をpush |
 | sub | スタックから2つpopして，減算した結果をpush |
 | mul | スタックから2つpopして，乗算した結果をpush |
 | div | スタックから2つpopして，除算した結果をpush |
 | dup | スタックから1つpopして，2回push |
-| store_global n| スタックから1つポップして，グローバル変数nに格納 |
-| load_global n | グローバル変数nの値をスタックにプッシュ |
-| store_local n| スタックから1つポップして，ローカル変数nに格納 |
-| load_local n | ローカル変数nの値をスタックにプッシュ |
+|new_array_int n|長さnの整数型配列領域を確保|
+|new_array_float n|長さnの実数型配列領域を確保|
+|new_array_char n|長さnの文字型配列領域を確保|
+|store_local_array n|スタックから2つpop(index, value)して，ローカル配列変数nのindex番に値valueを格納|
+|store_local_array n|スタックから2つpop(index, value)して，グローバル配列変数nのindex番に値valueを格納|
+|load_global_array n|スタックから1つpop(index)して，ローカル配列変数nのindex番の値をスタックにpush|
+|load_global_array n|スタックから1つpop(index)して，グローバル配列変数nのindex番の値をスタックにpush|
+| store_global n| スタックから1つポップして，グローバル変数nに格納|
+| load_global n | グローバル変数nの値をスタックにプッシュ|
+| store_local n| スタックから1つポップして，ローカル変数nに格納|
+| load_local n | ローカル変数nの値をスタックにプッシュ|
 | print | スタックから1つpopして，画面に出力 |
 | print_char | スタックから1つpopして，文字(ASCII)で画面に出力 |
 | if_equal n|スタックから2つpopして，比較演算(==)が真であればn行目へジャンプ|

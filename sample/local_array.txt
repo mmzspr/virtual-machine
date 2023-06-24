@@ -1,0 +1,21 @@
+new_array_int 5
+store_local 0
+push_int 10
+push_int 0
+store_local_array 0
+call 13
+push_int 0
+load_local_array 0
+print
+exit
+
+# === 12行目 === 
+new_array_int 5
+store_local 0
+push_int 8
+push_int 0
+store_local_array 0
+push_int 0
+load_local_array 0
+print
+exit
