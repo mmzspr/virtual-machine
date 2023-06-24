@@ -14,7 +14,9 @@ pytest test.py -v
 # 命令セット
 | 命令 | 説明 |
 |------|------|
-|push n| スタックにnをpush |
+|push_int n| スタックにnをpush |
+|push_float n| スタックにnをpush |
+|push_char n| スタックにnをpush |
 | add | スタックから2つpopして，加算した結果をpush |
 | sub | スタックから2つpopして，減算した結果をpush |
 | mul | スタックから2つpopして，乗算した結果をpush |

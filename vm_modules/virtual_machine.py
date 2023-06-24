@@ -50,8 +50,12 @@ class VirtualMachine:
                 match operand:
                     case "":
                         pass
-                    case "push":
-                        self.cmd_push(opcode)
+                    case "push_int":
+                        self.cmd_push_int(opcode)
+                    case "push_float":
+                        self.cmd_push_float(opcode)
+                    case "push_char":
+                        self.cmd_push_char(opcode)
                     case "add":
                         self.cmd_add()
                     case "sub":
@@ -122,10 +126,20 @@ class VirtualMachine:
     # ==============================
     #          コマンド
     # ==============================
-    def cmd_push(self, opcode):
+    def cmd_push_int(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
-        self.data_stack.push(opcode[0])
+        self.data_stack.push(int(opcode[0]))
+    
+    def cmd_push_float(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        self.data_stack.push(float(opcode[0]))
+    
+    def cmd_push_char(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        self.data_stack.push(chr(int(opcode[0])))
     
     def cmd_store_global(self, opcode):
         if len(opcode) == 0:
@@ -230,7 +244,7 @@ class VirtualMachine:
     
     def cmd_exit(self):
         if self.return_stack.is_empty():
-            print(time.time()-self.time)
+            # print(time.time()-self.time)
             exit(0)
         # 呼び出し前のメモリ領域に戻す
         self.local_area = self.local_area_stack.pop()
