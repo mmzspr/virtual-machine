@@ -26,8 +26,8 @@ pytest test.py -v
 |new_array_float n|長さnの実数型配列領域を確保|
 |new_array_char n|長さnの文字型配列領域を確保|
 |store_local_array n|スタックから2つpop(index, value)して，ローカル配列変数nのindex番に値valueを格納|
-|store_local_array n|スタックから2つpop(index, value)して，グローバル配列変数nのindex番に値valueを格納|
-|load_global_array n|スタックから1つpop(index)して，ローカル配列変数nのindex番の値をスタックにpush|
+|store_global_array n|スタックから2つpop(index, value)して，グローバル配列変数nのindex番に値valueを格納|
+|load_local_array n|スタックから1つpop(index)して，ローカル配列変数nのindex番の値をスタックにpush|
 |load_global_array n|スタックから1つpop(index)して，グローバル配列変数nのindex番の値をスタックにpush|
 | store_global n| スタックから1つポップして，グローバル変数nに格納|
 | load_global n | グローバル変数nの値をスタックにプッシュ|
