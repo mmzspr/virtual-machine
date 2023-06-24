@@ -181,7 +181,9 @@ class VirtualMachine:
         name = opcode[0]
         index = self.data_stack.pop()
         value = self.data_stack.pop()
-        self.global_area.store_array(name, index, value)
+
+        array = self.global_area.load(name)
+        array.store(index, value)
     
     def cmd_store_local_array(self, opcode):
         if len(opcode) == 0:
@@ -189,14 +191,18 @@ class VirtualMachine:
         name = opcode[0]
         index = self.data_stack.pop()
         value = self.data_stack.pop()
-        self.local_area.store_array(name, index, value)
+        
+        array = self.local_area.load(name)
+        array.store(index, value)
     
     def cmd_load_global_array(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         index = self.data_stack.pop()
-        value = self.global_area.load_array(name, index)
+
+        array = self.global_area.load(name)
+        value = array.load(index)
         self.data_stack.push(value)
     
     def cmd_load_local_array(self, opcode):
@@ -204,7 +210,9 @@ class VirtualMachine:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         index = self.data_stack.pop()
-        value = self.local_area.load_array(name, index)
+        
+        array = self.local_area.load(name)
+        value = array.load(index)
         self.data_stack.push(value)
     
     def cmd_store_global(self, opcode):
