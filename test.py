@@ -655,3 +655,19 @@ def test_error_undefined_global_variable_after_free(capsys):
     out, err = capsys.readouterr()
     assert err == f"{_color_red}syntax error (undefined variable): line 4, \"load_global 0\"{_color_reset}\n"
     assert exit_info.value.code == 1
+
+# 異なる型を配列に格納
+def test_error_mismatching_array_type(capsys):
+    text = "new_array_int 5\n"\
+           "store_local 0\n"\
+           "push_float 10\n"\
+           "push_int 0\n"\
+           "store_local_array 0\n"\
+           "exit\n"
+    
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert err == f"{_color_red}syntax error (mismatching array type): line 5, \"store_local_array 0\"{_color_reset}\n"
+    assert exit_info.value.code == 1

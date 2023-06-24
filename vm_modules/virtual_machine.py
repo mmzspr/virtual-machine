@@ -121,6 +121,8 @@ class VirtualMachine:
                         vm_error.syntax_error_missing_operand(n_line, code)
                     case "ERROR_UNDEFINED_OPCODE":
                         vm_error.syntax_error_undefined_opcode(n_line, code)
+                    case "ERROR_MISMATCHING_ARRAY_TYPE":
+                        vm_error.syntax_error_mismatching_array_type(n_line, code)
                     case "ERROR_LUNDEFINED_VAR":
                         vm_error.syntax_error_undefined_var(n_line, code)
                     case _:
@@ -163,17 +165,17 @@ class VirtualMachine:
     def cmd_new_array_int(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
-        self.data_stack.push(vm_array.Array("int", int(opcode[0])))
+        self.data_stack.push(vm_array.Array(int, int(opcode[0])))
     
     def cmd_new_array_float(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
-        self.data_stack.push(vm_array.Array("float", int(opcode[0])))
+        self.data_stack.push(vm_array.Array(float, int(opcode[0])))
     
     def cmd_new_array_char(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
-        self.data_stack.push(vm_array.Array("str", int(opcode[0])))
+        self.data_stack.push(vm_array.Array(str, int(opcode[0])))
     
     def cmd_store_global_array(self, opcode):
         if len(opcode) == 0:

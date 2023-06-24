@@ -6,6 +6,8 @@ class Array:
         self.type = array_type
     
     def store(self, index, value):
+        if type(value) is not self.type:
+            raise vm_error.Error("ERROR_MISMATCHING_ARRAY_TYPE")
         self.items[index] = value
     
     def load(self, index):    

@@ -36,6 +36,9 @@ def index_error_pop(n_line, code):
 def index_error_pc(n_line):
     _error(f"index error (program counter out of range): line {n_line}")
 
+def syntax_error_mismatching_array_type(n_line, code):
+    _error(f"syntax error (mismatching array type): line {n_line}, \"{code}\"")
+
 # 不明なエラー
 def unknown_error(n_line, code):
     _error(f"unknown error: line {n_line} \"{code}\"")
