@@ -431,7 +431,81 @@ def test_local(capsys):
     assert out == "2.0\n1.0\n0.0\n"
     assert exit_info.value.code == 0
 
+# グロ－バル配列変数
+def test_array(capsys):
+    text = "new_array_int 5\n"\
+           "store_global 0\n"\
+           "push_int 10\n"\
+           "push_int 0\n"\
+           "store_global_array 0\n"\
+           "push_int 30\n"\
+           "push_int 2\n"\
+           "store_global_array 0\n"\
+           "push_int 20\n"\
+           "push_int 1\n"\
+           "store_global_array 0\n"\
+           "call 28\n"\
+           "push_int 0\n"\
+           "load_global_array 0\n"\
+           "push_int 1\n"\
+           "load_global_array 0\n"\
+           "push_int 2\n"\
+           "load_global_array 0\n"\
+           "push_int 3\n"\
+           "load_global_array 0\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "print\n"\
+           "exit\n"\
+           "\n"\
+           "# === 27行目 ===\n"\
+           "push_int 40\n"\
+           "push_int 3\n"\
+           "store_global_array 0\n"\
+           "push_int 2\n"\
+           "load_global_array 0\n"\
+           "print\n"\
+           "exit\n"
 
+           
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "30\n40\n30\n20\n10\n"
+    assert exit_info.value.code == 0
+
+# ローカル配列変数
+def test_local(capsys):
+    text = "new_array_int 5\n"\
+           "store_local 0\n"\
+           "push_int 10\n"\
+           "push_int 0\n"\
+           "store_local_array 0\n"\
+           "call 13\n"\
+           "push_int 0\n"\
+           "load_local_array 0\n"\
+           "print\n"\
+           "exit\n"\
+           "\n"\
+           "# === 12行目 === \n"\
+           "new_array_int 5\n"\
+           "store_local 0\n"\
+           "push_int 8\n"\
+           "push_int 0\n"\
+           "store_local_array 0\n"\
+           "push_int 0\n"\
+           "load_local_array 0\n"\
+           "print\n"\
+           "exit"
+     
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert out == "8\n10\n"
+    assert exit_info.value.code == 0
 # ==============================
 #          複合
 # ==============================
