@@ -71,10 +71,14 @@ class VirtualMachine:
                         self.cmd_store_global(opcode)
                     case "load_global":
                         self.cmd_load_global(opcode)
+                    case "free_global":
+                        self.cmd_free_global(opcode)
                     case "store_local":
                         self.cmd_store_local(opcode)
                     case "load_local":
                         self.cmd_load_local(opcode)
+                    case "free_local":
+                        self.cmd_free_local(opcode)
                     case "new_array_int":
                         self.cmd_new_array_int(opcode)
                     case "new_array_float":
@@ -230,6 +234,18 @@ class VirtualMachine:
         name = opcode[0]
         value = self.local_area.load(name)
         self.data_stack.push(value)
+    
+    def cmd_free_global(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        self.global_area.free(name)
+    
+    def cmd_free_local(self, opcode):
+        if len(opcode) == 0:
+            raise vm_error.Error("ERROR_MISSING_OPERAND")
+        name = opcode[0]
+        self.local_area.free(name)
     
     def cmd_add(self):
         x = self.data_stack.pop()

@@ -1,3 +1,4 @@
+import gc
 from . import vm_error
 
 class AddressSpace:
@@ -12,6 +13,13 @@ class AddressSpace:
             raise vm_error.Error("ERROR_LUNDEFINED_VAR")
         
         return self.items[name]
+    
+    def free(self, name):
+        if name not in self.items:
+            raise vm_error.Error("ERROR_LUNDEFINED_VAR")
+        
+        del self.items[name]
+        gc.collect()
     
     def store_array(self, name, index, value):
         self.items[name].store(index, value)

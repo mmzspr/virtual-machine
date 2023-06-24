@@ -1,0 +1,6 @@
+push_int 1
+store_local 0
+free_local 0
+load_local 0
+print
+exit
