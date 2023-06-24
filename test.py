@@ -621,3 +621,37 @@ def test_error_undefined_local_variable(capsys):
     out, err = capsys.readouterr()
     assert err == f"{_color_red}syntax error (undefined variable): line 7, \"load_local 0\"{_color_reset}\n"
     assert exit_info.value.code == 1
+
+# 削除済みのローカル変数を参照
+def test_error_undefined_local_variable_after_free(capsys):
+    text = "push_int 1\n"\
+           "store_local 0\n"\
+           "free_local 0\n"\
+           "load_local 0\n"\
+           "print\n"\
+           "exit\n"\
+           "\n"
+    
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert err == f"{_color_red}syntax error (undefined variable): line 4, \"load_local 0\"{_color_reset}\n"
+    assert exit_info.value.code == 1
+
+# 削除済みのグローバル変数を参照
+def test_error_undefined_global_variable_after_free(capsys):
+    text = "push_int 1\n"\
+           "store_global 0\n"\
+           "free_global 0\n"\
+           "load_global 0\n"\
+           "print\n"\
+           "exit\n"\
+           "\n"
+    
+    with pytest.raises(SystemExit) as exit_info:
+        virtual_machine.run(text)
+
+    out, err = capsys.readouterr()
+    assert err == f"{_color_red}syntax error (undefined variable): line 4, \"load_global 0\"{_color_reset}\n"
+    assert exit_info.value.code == 1

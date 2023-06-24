@@ -31,8 +31,10 @@ pytest test.py -v
 |load_global_array n|スタックから1つpop(index)して，グローバル配列変数nのindex番の値をスタックにpush|
 | store_global n| スタックから1つポップして，グローバル変数nに格納|
 | load_global n | グローバル変数nの値をスタックにプッシュ|
+|free_global n|グローバル変数nを解放|
 | store_local n| スタックから1つポップして，ローカル変数nに格納|
 | load_local n | ローカル変数nの値をスタックにプッシュ|
+|free_local n|ローカル変数nを解放|
 | print | スタックから1つpopして，画面に出力 |
 | print_char | スタックから1つpopして，文字(ASCII)で画面に出力 |
 | if_equal n|スタックから2つpopして，比較演算(==)が真であればn行目へジャンプ|
