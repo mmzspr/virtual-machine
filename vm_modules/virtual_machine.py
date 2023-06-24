@@ -56,8 +56,6 @@ class VirtualMachine:
                         self.cmd_push_float(opcode)
                     case "push_char":
                         self.cmd_push_char(opcode)
-                    case "push":
-                        self.cmd_push(opcode)
                     case "add":
                         self.cmd_add()
                     case "sub":
@@ -128,11 +126,6 @@ class VirtualMachine:
     # ==============================
     #          コマンド
     # ==============================
-    def cmd_push(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
-        self.data_stack.push(opcode[0])
-    
     def cmd_push_int(self, opcode):
         if len(opcode) == 0:
             raise vm_error.Error("ERROR_MISSING_OPERAND")
