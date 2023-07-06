@@ -126,7 +126,7 @@ class VirtualMachine:
                         vm_error.syntax_error_undefined_opcode(n_line, code)
                     case "ERROR_MISMATCHING_ARRAY_TYPE":
                         vm_error.syntax_error_mismatching_array_type(n_line, code)
-                    case "ERROR_LUNDEFINED_VAR":
+                    case "ERROR_UNDEFINED_VAR":
                         vm_error.syntax_error_undefined_var(n_line, code)
                     case _:
                         vm_error.unknown_error(n_line, code)
