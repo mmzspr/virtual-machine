@@ -7,11 +7,14 @@ import time
 
 __all__ = ["run"]
 
+time_flag = False
+
 # ==============================
 #     バーチャルマシン実行
 # ==============================
 def run(text):
-    virtual_machine = VirtualMachine(text)
+    start_time = time.time()
+    virtual_machine = VirtualMachine(text, time_flag)
     virtual_machine.run()
 
 
@@ -21,7 +24,9 @@ def run(text):
 class VirtualMachine:
 
     # ===== 初期化 =====
-    def __init__(self, text):
+    def __init__(self, text, time_flag):
+        self.time_flag = time_flag
+        self.start_time = time.time()
         self.lines = text.split("\n") # 改行区切りのリスト
         self.progmem = self._parseLines(self.lines) # パース済み命令リスト
         self.data_stack = vm_stack.Stack() # スタック
@@ -31,12 +36,10 @@ class VirtualMachine:
         self.local_area_stack = vm_stack.Stack() # ローカル変数領域のスタック
         self.local_area = vm_address_space.AddressSpace() # ローカル変数領域
         self.global_area = vm_address_space.AddressSpace() # グローバル変数領域
-        self.time = 0
 
     
     # ===== 実行 =====
     def run(self):
-        self.time = time.time()
         while True:
             # プログラムカウンタを進める
             self.pc+=1
@@ -332,7 +335,8 @@ class VirtualMachine:
     
     def cmd_exit(self):
         if self.return_stack.is_empty():
-            # print(time.time()-self.time)
+            if self.time_flag:
+                print("time: " + str(time.time() - self.start_time))
             exit(0)
         # 呼び出し前のメモリ領域に戻す
         self.local_area = self.local_area_stack.pop()
