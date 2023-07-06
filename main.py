@@ -17,9 +17,7 @@ def main():
     
     if len(sys.argv) > 1:
         for arg in sys.argv[2:]:
-            print(arg)
             if arg == "-time":
-                print("ok")
                 virtual_machine.time_flag = True
     
     file_path = sys.argv[1]
