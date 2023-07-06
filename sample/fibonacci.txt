@@ -1,0 +1,28 @@
+# フィボナッチ数の計算 {0, 1, 1, 2, 3, 5, ...}
+push_int 10 # fibonacci(35)を計算
+call 8
+print
+exit
+
+# フィボナッチ数の計算する関数
+store_local 0
+load_local 0 # if (n == 0) jump 26
+push_int 0
+if_equal 26
+load_local 0 # if (n == 1) jump 26
+push_int 1
+if_equal 26
+push_int 1  # fibonacci(n-1)を計算
+load_local 0 
+sub
+call 8
+push_int 2 # fibonacci(n-2)を計算
+load_local 0
+sub
+call 8
+add # fibonacci(n-1) + fibonacci(n-2)
+exit
+# return n
+load_local 0
+exit
+
