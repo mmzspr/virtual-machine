@@ -15,6 +15,13 @@ def main():
         print(f"ファイルが存在しません: {sys.argv[1]}")
         sys.exit(1)
     
+    if len(sys.argv) > 1:
+        for arg in sys.argv[2:]:
+            print(arg)
+            if arg == "-time":
+                print("ok")
+                virtual_machine.time_flag = True
+    
     file_path = sys.argv[1]
 
     # ファイル読み込み
