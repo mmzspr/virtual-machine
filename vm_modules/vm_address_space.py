@@ -10,13 +10,13 @@ class AddressSpace:
     
     def load(self, name):
         if name not in self.items:
-            raise vm_error.Error("ERROR_LUNDEFINED_VAR")
+            raise vm_error.Error("ERROR_UNDEFINED_VAR")
         
         return self.items[name]
     
     def free(self, name):
         if name not in self.items:
-            raise vm_error.Error("ERROR_LUNDEFINED_VAR")
+            raise vm_error.Error("ERROR_UNDEFINED_VAR")
         
         del self.items[name]
         gc.collect()
