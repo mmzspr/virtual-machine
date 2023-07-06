@@ -55,7 +55,9 @@ pytest test.py -v
     ├── vm_modules              # 仮想スタックマシン関連のモジュール
     │   ├── virtual_machine.py      # 命令の解析・実行
     │   ├── vm_error.py             # エラー処理
-    │   └── vm_stack                # スタック
+    │   ├── vm_stack                # スタック
+    │   ├── vm_address_space.py     # アドレス空間の管理
+    │   └── vm_array.py             # 配列
     ├── main.py                 # プログラム実行用ファイル
     └── test.py                 # 単体テスト
     
