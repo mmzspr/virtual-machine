@@ -40,6 +40,8 @@ class VirtualMachine:
     
     # ===== 実行 =====
     def run(self):
+        self.check_syntax()
+
         while True:
             # プログラムカウンタを進める
             self.pc+=1
@@ -146,43 +148,62 @@ class VirtualMachine:
             result.append({"operand":operand, "opcode":opcode})
         return result
     
+    def check_syntax(self):
+        opcode_with_operand = [
+            "push_int",
+            "push_float",
+            "push_char",
+            "store_global",
+            "load_global",
+            "free_global",
+            "store_local",
+            "load_local",
+            "free_local",
+            "new_array_int",
+            "new_array_float",
+            "new_array_char",
+            "store_local_array",
+            "store_global_array",
+            "load_local_array",
+            "load_global_array",
+            "if_equal",
+            "if_greater",
+            "if_less",
+            "jump",
+            "call"
+        ]
+        for i, line in enumerate(self.progmem):
+            operand = line["operand"]
+            opcode = line["opcode"]
+
+            if operand in opcode_with_operand:
+                if len(opcode) == 0:
+                    code = self.lines[i]
+                    vm_error.syntax_error_missing_operand(i+1, code)
+
 
     # ==============================
     #          コマンド
     # ==============================
     def cmd_push_int(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.data_stack.push(int(opcode[0]))
     
     def cmd_push_float(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.data_stack.push(float(opcode[0]))
     
     def cmd_push_char(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.data_stack.push(chr(int(opcode[0])))
     
     def cmd_new_array_int(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.data_stack.push(vm_array.Array(int, int(opcode[0])))
     
     def cmd_new_array_float(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.data_stack.push(vm_array.Array(float, int(opcode[0])))
     
     def cmd_new_array_char(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.data_stack.push(vm_array.Array(str, int(opcode[0])))
     
     def cmd_store_global_array(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         index = self.data_stack.pop()
         value = self.data_stack.pop()
@@ -191,8 +212,6 @@ class VirtualMachine:
         array.store(index, value)
     
     def cmd_store_local_array(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         index = self.data_stack.pop()
         value = self.data_stack.pop()
@@ -201,8 +220,6 @@ class VirtualMachine:
         array.store(index, value)
     
     def cmd_load_global_array(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         index = self.data_stack.pop()
 
@@ -211,8 +228,6 @@ class VirtualMachine:
         self.data_stack.push(value)
     
     def cmd_load_local_array(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         index = self.data_stack.pop()
         
@@ -221,42 +236,30 @@ class VirtualMachine:
         self.data_stack.push(value)
     
     def cmd_store_global(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         value = self.data_stack.pop()
         self.global_area.store(name, value)
     
     def cmd_load_global(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         value = self.global_area.load(name)
         self.data_stack.push(value)
     
     def cmd_store_local(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         value = self.data_stack.pop()
         self.local_area.store(name, value)
     
     def cmd_load_local(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         value = self.local_area.load(name)
         self.data_stack.push(value)
     
     def cmd_free_global(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         self.global_area.free(name)
     
     def cmd_free_local(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         name = opcode[0]
         self.local_area.free(name)
     
@@ -286,32 +289,24 @@ class VirtualMachine:
         self.data_stack.push(x)
     
     def cmd_if_equal(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         x = self.data_stack.pop()
         y = self.data_stack.pop()
         if x == y:
             self.pc = int(opcode[0]) -2
     
     def cmd_if_greater(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         x = self.data_stack.pop()
         y = self.data_stack.pop()
         if x > y:
             self.pc = int(opcode[0]) -2
     
     def cmd_if_less(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         x = self.data_stack.pop()
         y = self.data_stack.pop()
         if x < y:
             self.pc = int(opcode[0]) -2
     
     def cmd_jump(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
         self.pc = int(opcode[0]) -2
     
     def cmd_print(self):
@@ -323,9 +318,6 @@ class VirtualMachine:
         print(chr(int(x)), end="")
     
     def cmd_call(self, opcode):
-        if len(opcode) == 0:
-            raise vm_error.Error("ERROR_MISSING_OPERAND")
-        
         # メモリ領域確保
         self.local_area_stack.push(self.local_area)
         self.local_area = vm_address_space.AddressSpace()
