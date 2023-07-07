@@ -1,5 +1,5 @@
 # フィボナッチ数の計算 {0, 1, 1, 2, 3, 5, ...}
-push_int 10 # fibonacci(35)を計算
+push_int 30 # fibonacci(35)を計算
 call 8
 print
 exit
