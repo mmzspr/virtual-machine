@@ -237,32 +237,20 @@ class VirtualMachine:
         self.data_stack.push(vm_array.Array(str, operand[0]))
     
     def cmd_store_global_array(self, operand):
-        index = self.data_stack.pop()
-        value = self.data_stack.pop()
-
         array = self.global_area.load(operand[0])
-        array.store(index, value)
+        array.store(self.data_stack.pop(), self.data_stack.pop())
     
     def cmd_store_local_array(self, operand):
-        index = self.data_stack.pop()
-        value = self.data_stack.pop()
-        
         array = self.local_area.load(operand[0])
-        array.store(index, value)
+        array.store(self.data_stack.pop(), self.data_stack.pop())
     
     def cmd_load_global_array(self, operand):
-        index = self.data_stack.pop()
-
         array = self.global_area.load(operand[0])
-        value = array.load(index)
-        self.data_stack.push(value)
+        self.data_stack.push(array.load(self.data_stack.pop()))
     
     def cmd_load_local_array(self, operand):
-        index = self.data_stack.pop()
-        
         array = self.local_area.load(operand[0])
-        value = array.load(index)
-        self.data_stack.push(value)
+        self.data_stack.push(array.load(self.data_stack.pop()))
     
     def cmd_store_global(self, operand):
         self.global_area.store(operand[0], self.data_stack.pop())
