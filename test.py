@@ -67,29 +67,6 @@ def test_comment(capsys):
     assert out == "2.0\n1.0\n"
     assert exit_info.value.code == 0
 
-# 文字として出力
-def test_print_c(capsys):
-    text = "push_float 10\n"\
-           "push_float 111\n"\
-           "push_float 108\n"\
-           "push_float 108\n"\
-           "push_float 101\n"\
-           "push_float 72\n"\
-           "print_char\n"\
-           "print_char\n"\
-           "print_char\n"\
-           "print_char\n"\
-           "print_char\n"\
-           "print_char\n"\
-           "exit\n"
-    with pytest.raises(SystemExit) as exit_info:
-        virtual_machine.run(text)
-
-    out, err = capsys.readouterr()
-    print(out)
-    assert out == "Hello\n"
-    assert exit_info.value.code == 0
-
 # 加算
 def test_add(capsys):
     text = "push_float 1\n"\

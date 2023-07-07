@@ -41,7 +41,6 @@ pytest test.py -v
 | load_local n | ローカル変数nの値をスタックにプッシュ|
 |free_local n|ローカル変数nを解放|
 | print | スタックから1つpopして，画面に出力 |
-| print_char | スタックから1つpopして，文字(ASCII)で画面に出力 |
 | if_equal n|スタックから2つpopして，比較演算(==)が真であればn行目へジャンプ|
 | if_greater n|スタックから2つpopして，比較演算(>)が真であればn行目へジャンプ|
 | if_less n|スタックから2つpopして，比較演算(<)が真であればn行目へジャンプ|

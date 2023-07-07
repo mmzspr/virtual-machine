@@ -145,7 +145,7 @@ class VirtualMachine:
             operand = [float(x) for x in data[1:] if x != ''] # オペランドがあれば取得
             result.append({"opcode":opcode, "operand":operand})
         return result
-    
+
     def check_syntax(self):
         opcode_with_operand = [
             "push_int",
@@ -170,6 +170,34 @@ class VirtualMachine:
             "jump",
             "call"
         ]
+        opcode_with_operand_int = [
+            "push_int",
+            "store_global",
+            "load_global",
+            "free_global",
+            "store_local",
+            "load_local",
+            "free_local",
+            "new_array_int",
+            "new_array_float",
+            "new_array_char",
+            "store_local_array",
+            "store_global_array",
+            "load_local_array",
+            "load_global_array",
+            "if_equal",
+            "if_greater",
+            "if_less",
+            "jump",
+            "call"
+        ]
+        opcode_with_operand_float = [
+            "push_float"
+        ]
+        opcode_with_operand_char = [
+            "push_char"
+        ]
+        
         for i, line in enumerate(self.progmem):
             opcode = line["opcode"]
             operand = line["operand"]
@@ -178,28 +206,35 @@ class VirtualMachine:
                 if not operand:
                     code = self.lines[i]
                     vm_error.syntax_error_missing_operand(i+1, code)
+            
+            if opcode in opcode_with_operand_int:
+                line["operand"][0] = int(line["operand"][0])
+            elif opcode in opcode_with_operand_float:
+                line["operand"][0] = float(line["operand"][0])
+            elif opcode in opcode_with_operand_char:
+                line["operand"][0] = chr(int(line["operand"][0]))
 
 
     # ==============================
     #          コマンド
     # ==============================
     def cmd_push_int(self, operand):
-        self.data_stack.push(int(operand[0]))
+        self.data_stack.push(operand[0])
     
     def cmd_push_float(self, operand):
-        self.data_stack.push(float(operand[0]))
+        self.data_stack.push(operand[0])
     
     def cmd_push_char(self, operand):
-        self.data_stack.push(chr(int(operand[0])))
+        self.data_stack.push(operand[0])
     
     def cmd_new_array_int(self, operand):
-        self.data_stack.push(vm_array.Array(int, int(operand[0])))
+        self.data_stack.push(vm_array.Array(int, operand[0]))
     
     def cmd_new_array_float(self, operand):
-        self.data_stack.push(vm_array.Array(float, int(operand[0])))
+        self.data_stack.push(vm_array.Array(float, operand[0]))
     
     def cmd_new_array_char(self, operand):
-        self.data_stack.push(vm_array.Array(str, int(operand[0])))
+        self.data_stack.push(vm_array.Array(str, operand[0]))
     
     def cmd_store_global_array(self, operand):
         name = operand[0]
@@ -290,30 +325,26 @@ class VirtualMachine:
         x = self.data_stack.pop()
         y = self.data_stack.pop()
         if x == y:
-            self.pc = int(operand[0]) -2
+            self.pc = operand[0] -2
     
     def cmd_if_greater(self, operand):
         x = self.data_stack.pop()
         y = self.data_stack.pop()
         if x > y:
-            self.pc = int(operand[0]) -2
+            self.pc = operand[0] -2
     
     def cmd_if_less(self, operand):
         x = self.data_stack.pop()
         y = self.data_stack.pop()
         if x < y:
-            self.pc = int(operand[0]) -2
+            self.pc = operand[0] -2
     
     def cmd_jump(self, operand):
-        self.pc = int(operand[0]) -2
+        self.pc = operand[0] -2
     
     def cmd_print(self):
         x = self.data_stack.pop()
         print(x)
-    
-    def cmd_print_char(self):
-        x = self.data_stack.pop()
-        print(chr(int(x)), end="")
     
     def cmd_call(self, operand):
         # メモリ領域確保
@@ -321,7 +352,7 @@ class VirtualMachine:
         self.local_area = vm_address_space.AddressSpace()
         # プログラムカウンタ変更
         self.return_stack.push(self.pc)
-        self.pc = int(operand[0]) -2
+        self.pc = operand[0] -2
     
     def cmd_exit(self):
         if self.return_stack.is_empty():
