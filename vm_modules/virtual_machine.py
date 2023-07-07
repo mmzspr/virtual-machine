@@ -41,12 +41,12 @@ class VirtualMachine:
     # ===== 実行 =====
     def run(self):
         self.check_syntax()
-
+        program_lenght = len(self.progmem)
         while True:
             # プログラムカウンタを進める
             self.pc+=1
 
-            if self.pc >= len(self.progmem):
+            if self.pc >= program_lenght:
                  vm_error.index_error_pc(self.pc + 1)
 
             opcode = self.progmem[self.pc]["opcode"]
