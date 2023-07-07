@@ -237,84 +237,62 @@ class VirtualMachine:
         self.data_stack.push(vm_array.Array(str, operand[0]))
     
     def cmd_store_global_array(self, operand):
-        name = operand[0]
         index = self.data_stack.pop()
         value = self.data_stack.pop()
 
-        array = self.global_area.load(name)
+        array = self.global_area.load(operand[0])
         array.store(index, value)
     
     def cmd_store_local_array(self, operand):
-        name = operand[0]
         index = self.data_stack.pop()
         value = self.data_stack.pop()
         
-        array = self.local_area.load(name)
+        array = self.local_area.load(operand[0])
         array.store(index, value)
     
     def cmd_load_global_array(self, operand):
-        name = operand[0]
         index = self.data_stack.pop()
 
-        array = self.global_area.load(name)
+        array = self.global_area.load(operand[0])
         value = array.load(index)
         self.data_stack.push(value)
     
     def cmd_load_local_array(self, operand):
-        name = operand[0]
         index = self.data_stack.pop()
         
-        array = self.local_area.load(name)
+        array = self.local_area.load(operand[0])
         value = array.load(index)
         self.data_stack.push(value)
     
     def cmd_store_global(self, operand):
-        name = operand[0]
-        value = self.data_stack.pop()
-        self.global_area.store(name, value)
+        self.global_area.store(operand[0], self.data_stack.pop())
     
     def cmd_load_global(self, operand):
-        name = operand[0]
-        value = self.global_area.load(name)
-        self.data_stack.push(value)
+        self.data_stack.push(self.global_area.load(operand[0]))
     
     def cmd_store_local(self, operand):
-        name = operand[0]
-        value = self.data_stack.pop()
-        self.local_area.store(name, value)
+        self.local_area.store(operand[0], self.data_stack.pop())
     
     def cmd_load_local(self, operand):
-        name = operand[0]
-        value = self.local_area.load(name)
-        self.data_stack.push(value)
+        self.data_stack.push(self.local_area.load(operand[0]))
     
     def cmd_free_global(self, operand):
-        name = operand[0]
-        self.global_area.free(name)
+        self.global_area.free(operand[0])
     
     def cmd_free_local(self, operand):
-        name = operand[0]
-        self.local_area.free(name)
+        self.local_area.free(operand[0])
     
     def cmd_add(self):
-        x = self.data_stack.pop()
-        y = self.data_stack.pop()
-        self.data_stack.push(x + y)
+        self.data_stack.push(self.data_stack.pop() + self.data_stack.pop())
     
     def cmd_sub(self):
-        x = self.data_stack.pop()
-        y = self.data_stack.pop()
-        self.data_stack.push(x - y)
+        self.data_stack.push(self.data_stack.pop() - self.data_stack.pop())
     
     def cmd_mul(self):
-        x = self.data_stack.pop()
-        y = self.data_stack.pop()
-        self.data_stack.push(x * y)
+        self.data_stack.push(self.data_stack.pop() * self.data_stack.pop())
 
     def cmd_div(self):
-        x = self.data_stack.pop()
-        y = self.data_stack.pop()
-        self.data_stack.push(x / y)
+        self.data_stack.push(self.data_stack.pop() / self.data_stack.pop())
     
     def cmd_dup(self):
         x = self.data_stack.pop()
@@ -322,29 +300,22 @@ class VirtualMachine:
         self.data_stack.push(x)
     
     def cmd_if_equal(self, operand):
-        x = self.data_stack.pop()
-        y = self.data_stack.pop()
-        if x == y:
+        if self.data_stack.pop() == self.data_stack.pop():
             self.pc = operand[0] -2
     
     def cmd_if_greater(self, operand):
-        x = self.data_stack.pop()
-        y = self.data_stack.pop()
-        if x > y:
+        if self.data_stack.pop() > self.data_stack.pop():
             self.pc = operand[0] -2
     
     def cmd_if_less(self, operand):
-        x = self.data_stack.pop()
-        y = self.data_stack.pop()
-        if x < y:
+        if self.data_stack.pop() < self.data_stack.pop():
             self.pc = operand[0] -2
     
     def cmd_jump(self, operand):
         self.pc = operand[0] -2
     
     def cmd_print(self):
-        x = self.data_stack.pop()
-        print(x)
+        print(self.data_stack.pop())
     
     def cmd_call(self, operand):
         # メモリ領域確保
