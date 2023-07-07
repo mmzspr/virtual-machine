@@ -122,8 +122,6 @@ class VirtualMachine:
                 match e.args[0]:
                     case "ERROR_POP_FROM_EMPTY_STACK":
                         vm_error.index_error_pop(n_line, code)
-                    case "ERROR_MISSING_OPERAND":
-                        vm_error.syntax_error_missing_operand(n_line, code)
                     case "ERROR_UNDEFINED_OPCODE":
                         vm_error.syntax_error_undefined_opcode(n_line, code)
                     case "ERROR_MISMATCHING_ARRAY_TYPE":
