@@ -48,20 +48,20 @@ class VirtualMachine:
 
             if self.pc >= len(self.progmem):
                  vm_error.index_error_pc(self.pc + 1)
-            
-            operand = self.progmem[self.pc]["operand"]
+
             opcode = self.progmem[self.pc]["opcode"]
+            operand = self.progmem[self.pc]["operand"]
             try:
                 # オペランドに応じて実行
-                match operand:
+                match opcode:
                     case "":
                         pass
                     case "push_int":
-                        self.cmd_push_int(opcode)
+                        self.cmd_push_int(operand)
                     case "push_float":
-                        self.cmd_push_float(opcode)
+                        self.cmd_push_float(operand)
                     case "push_char":
-                        self.cmd_push_char(opcode)
+                        self.cmd_push_char(operand)
                     case "add":
                         self.cmd_add()
                     case "sub":
@@ -73,45 +73,45 @@ class VirtualMachine:
                     case "dup":
                         self.cmd_dup()
                     case "store_global":
-                        self.cmd_store_global(opcode)
+                        self.cmd_store_global(operand)
                     case "load_global":
-                        self.cmd_load_global(opcode)
+                        self.cmd_load_global(operand)
                     case "free_global":
-                        self.cmd_free_global(opcode)
+                        self.cmd_free_global(operand)
                     case "store_local":
-                        self.cmd_store_local(opcode)
+                        self.cmd_store_local(operand)
                     case "load_local":
-                        self.cmd_load_local(opcode)
+                        self.cmd_load_local(operand)
                     case "free_local":
-                        self.cmd_free_local(opcode)
+                        self.cmd_free_local(operand)
                     case "new_array_int":
-                        self.cmd_new_array_int(opcode)
+                        self.cmd_new_array_int(operand)
                     case "new_array_float":
-                        self.cmd_new_array_float(opcode)
+                        self.cmd_new_array_float(operand)
                     case "new_array_char":
-                        self.cmd_new_array_char(opcode)
+                        self.cmd_new_array_char(operand)
                     case "store_local_array":
-                        self.cmd_store_local_array(opcode)
+                        self.cmd_store_local_array(operand)
                     case "store_global_array":
-                        self.cmd_store_global_array(opcode)
+                        self.cmd_store_global_array(operand)
                     case "load_local_array":
-                        self.cmd_load_local_array(opcode)
+                        self.cmd_load_local_array(operand)
                     case "load_global_array":
-                        self.cmd_load_global_array(opcode)
+                        self.cmd_load_global_array(operand)
                     case "print":
                         self.cmd_print()
                     case "print_char":
                         self.cmd_print_char()
                     case "if_equal":
-                        self.cmd_if_equal(opcode)
+                        self.cmd_if_equal(operand)
                     case "if_greater":
-                        self.cmd_if_greater(opcode)
+                        self.cmd_if_greater(operand)
                     case "if_less":
-                        self.cmd_if_less(opcode)
+                        self.cmd_if_less(operand)
                     case "jump":
-                        self.cmd_jump(opcode)
+                        self.cmd_jump(operand)
                     case "call":
-                        self.cmd_call(opcode)
+                        self.cmd_call(operand)
                     case "exit":
                         self.cmd_exit()
                     case _:
@@ -141,9 +141,9 @@ class VirtualMachine:
             line = re.sub(r"#.*","", line) # コメント除去
             data = line.split()
 
-            operand = data[0] if len(data) else "" # オペランドがあれば取得
-            opcode = [float(x) for x in data[1:] if x != ''] # オペコードがあれば取得
-            result.append({"operand":operand, "opcode":opcode})
+            opcode = data[0] if len(data) else "" # オペコードがあれば取得
+            operand = [float(x) for x in data[1:] if x != ''] # オペランドがあれば取得
+            result.append({"opcode":opcode, "operand":operand})
         return result
     
     def check_syntax(self):
@@ -171,11 +171,11 @@ class VirtualMachine:
             "call"
         ]
         for i, line in enumerate(self.progmem):
-            operand = line["operand"]
             opcode = line["opcode"]
+            operand = line["operand"]
 
-            if operand in opcode_with_operand:
-                if len(opcode) == 0:
+            if opcode in opcode_with_operand:
+                if not operand:
                     code = self.lines[i]
                     vm_error.syntax_error_missing_operand(i+1, code)
 
@@ -183,82 +183,82 @@ class VirtualMachine:
     # ==============================
     #          コマンド
     # ==============================
-    def cmd_push_int(self, opcode):
-        self.data_stack.push(int(opcode[0]))
+    def cmd_push_int(self, operand):
+        self.data_stack.push(int(operand[0]))
     
-    def cmd_push_float(self, opcode):
-        self.data_stack.push(float(opcode[0]))
+    def cmd_push_float(self, operand):
+        self.data_stack.push(float(operand[0]))
     
-    def cmd_push_char(self, opcode):
-        self.data_stack.push(chr(int(opcode[0])))
+    def cmd_push_char(self, operand):
+        self.data_stack.push(chr(int(operand[0])))
     
-    def cmd_new_array_int(self, opcode):
-        self.data_stack.push(vm_array.Array(int, int(opcode[0])))
+    def cmd_new_array_int(self, operand):
+        self.data_stack.push(vm_array.Array(int, int(operand[0])))
     
-    def cmd_new_array_float(self, opcode):
-        self.data_stack.push(vm_array.Array(float, int(opcode[0])))
+    def cmd_new_array_float(self, operand):
+        self.data_stack.push(vm_array.Array(float, int(operand[0])))
     
-    def cmd_new_array_char(self, opcode):
-        self.data_stack.push(vm_array.Array(str, int(opcode[0])))
+    def cmd_new_array_char(self, operand):
+        self.data_stack.push(vm_array.Array(str, int(operand[0])))
     
-    def cmd_store_global_array(self, opcode):
-        name = opcode[0]
+    def cmd_store_global_array(self, operand):
+        name = operand[0]
         index = self.data_stack.pop()
         value = self.data_stack.pop()
 
         array = self.global_area.load(name)
         array.store(index, value)
     
-    def cmd_store_local_array(self, opcode):
-        name = opcode[0]
+    def cmd_store_local_array(self, operand):
+        name = operand[0]
         index = self.data_stack.pop()
         value = self.data_stack.pop()
         
         array = self.local_area.load(name)
         array.store(index, value)
     
-    def cmd_load_global_array(self, opcode):
-        name = opcode[0]
+    def cmd_load_global_array(self, operand):
+        name = operand[0]
         index = self.data_stack.pop()
 
         array = self.global_area.load(name)
         value = array.load(index)
         self.data_stack.push(value)
     
-    def cmd_load_local_array(self, opcode):
-        name = opcode[0]
+    def cmd_load_local_array(self, operand):
+        name = operand[0]
         index = self.data_stack.pop()
         
         array = self.local_area.load(name)
         value = array.load(index)
         self.data_stack.push(value)
     
-    def cmd_store_global(self, opcode):
-        name = opcode[0]
+    def cmd_store_global(self, operand):
+        name = operand[0]
         value = self.data_stack.pop()
         self.global_area.store(name, value)
     
-    def cmd_load_global(self, opcode):
-        name = opcode[0]
+    def cmd_load_global(self, operand):
+        name = operand[0]
         value = self.global_area.load(name)
         self.data_stack.push(value)
     
-    def cmd_store_local(self, opcode):
-        name = opcode[0]
+    def cmd_store_local(self, operand):
+        name = operand[0]
         value = self.data_stack.pop()
         self.local_area.store(name, value)
     
-    def cmd_load_local(self, opcode):
-        name = opcode[0]
+    def cmd_load_local(self, operand):
+        name = operand[0]
         value = self.local_area.load(name)
         self.data_stack.push(value)
     
-    def cmd_free_global(self, opcode):
-        name = opcode[0]
+    def cmd_free_global(self, operand):
+        name = operand[0]
         self.global_area.free(name)
     
-    def cmd_free_local(self, opcode):
-        name = opcode[0]
+    def cmd_free_local(self, operand):
+        name = operand[0]
         self.local_area.free(name)
     
     def cmd_add(self):
@@ -286,26 +286,26 @@ class VirtualMachine:
         self.data_stack.push(x)
         self.data_stack.push(x)
     
-    def cmd_if_equal(self, opcode):
+    def cmd_if_equal(self, operand):
         x = self.data_stack.pop()
         y = self.data_stack.pop()
         if x == y:
-            self.pc = int(opcode[0]) -2
+            self.pc = int(operand[0]) -2
     
-    def cmd_if_greater(self, opcode):
+    def cmd_if_greater(self, operand):
         x = self.data_stack.pop()
         y = self.data_stack.pop()
         if x > y:
-            self.pc = int(opcode[0]) -2
+            self.pc = int(operand[0]) -2
     
-    def cmd_if_less(self, opcode):
+    def cmd_if_less(self, operand):
         x = self.data_stack.pop()
         y = self.data_stack.pop()
         if x < y:
-            self.pc = int(opcode[0]) -2
+            self.pc = int(operand[0]) -2
     
-    def cmd_jump(self, opcode):
-        self.pc = int(opcode[0]) -2
+    def cmd_jump(self, operand):
+        self.pc = int(operand[0]) -2
     
     def cmd_print(self):
         x = self.data_stack.pop()
@@ -315,13 +315,13 @@ class VirtualMachine:
         x = self.data_stack.pop()
         print(chr(int(x)), end="")
     
-    def cmd_call(self, opcode):
+    def cmd_call(self, operand):
         # メモリ領域確保
         self.local_area_stack.push(self.local_area)
         self.local_area = vm_address_space.AddressSpace()
         # プログラムカウンタ変更
         self.return_stack.push(self.pc)
-        self.pc = int(opcode[0]) -2
+        self.pc = int(operand[0]) -2
     
     def cmd_exit(self):
         if self.return_stack.is_empty():
