@@ -1,6 +1,13 @@
 # virtual-machine
 Pythonで実装した仮想スタックマシン
 
+- [virtual-machine](#virtual-machine)
+- [実行](#実行)
+      - [実行時間(s)を表示](#実行時間sを表示)
+- [テスト](#テスト)
+- [命令セット](#命令セット)
+- [ディレクトリ構成](#ディレクトリ構成)
+
 # 実行
 ```
 python main.py プログラムファイル名
