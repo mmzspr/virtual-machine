@@ -33,7 +33,7 @@ exit
 call 39 ######################### [init]
 exit
 call 102 ######################### [update]
-call 132 ######################### [draw]
+call 135 ######################### [draw]
 exit
 
 # [init] 初期化
@@ -58,7 +58,7 @@ store_global 7 # 画面バッファ5
 # 画面描画
 push_int 0
 store_local 1 # 画面バッファの文字数
-push_char 32 # 描画開始
+push_char 32 # 描画開始 ##61
 load_local 1
 store_global_array 3
 push_char 32
@@ -81,7 +81,7 @@ load_local 1
 load_local 0
 if_equal 84 ############ exit
 jump 61  ##########
-push_char 10 # 改行
+push_char 10 # 改行  ##84
 load_local 1
 store_global_array 3
 push_char 10
@@ -102,23 +102,26 @@ exit
 ###         push_int 32 # スペースキー
 ###         call 126 ######################### [key]
 ###         print
-push_int 37 # 左矢印キー
-call 126 ######################### [key]
+load_global 1
 push_int 0
-if_equal 113 ######################### x座標更新スキップ
+if_equal 116 ######################### x座標更新スキップ
+push_int 37 # 左矢印キー
+call 129 ######################### [key]
+push_int 0
+if_equal 116 ######################### x座標更新スキップ
 push_int 1
 load_global 1
 sub
 store_global 1
-push_int 39 # 右矢印キー
-call 126 ######################### [key]
+push_int 39 # 右矢印キー ##116
+call 129 ######################### [key]
 push_int 0
-if_equal 121 ######################### x座標更新スキップ
+if_equal 124 ######################### x座標更新スキップ
 push_int 1
 load_global 1
 add
 store_global 1
-###         load_global 1
+###         load_global 1 ##124
 ###         print
 exit
 
@@ -130,7 +133,7 @@ load_local_array 0
 exit
 
 # [draw] 描画
-call 169 ######################### [update buffer]
+call 172 ######################### [update buffer]
 load_global 3  # 画面描画
 push_int 1
 ffi_call 0
@@ -171,13 +174,13 @@ push_int 1
 load_global 1
 sub
 store_local 0 # x座標
-push_int 0
+push_int 0 ##177
 load_local 0
-if_less 180 ######################### x座標更新スキップ
+if_less 183 ######################### x座標更新スキップ
 push_char 32
 load_local 0
 store_global_array 6
-load_local 0
+load_local 0  ##183
 push_int 1
 add
 store_local 0
@@ -185,9 +188,9 @@ load_local 0
 push_int 1
 load_global 1
 add
-if_less 190 ######################### x座標更新スキップ
-jump 174
-push_char 38
+if_less 193 ######################### x座標更新スキップ
+jump 177 #########################
+push_char 38 ##193
 load_global 1
 store_global_array 6
 exit
