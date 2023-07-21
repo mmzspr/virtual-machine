@@ -7,7 +7,8 @@ int unix_time(void);
 '''
 
 ffi_list = [
-    {"name": "print", "arg_n": 1, "return": False, "result_len": 0},
-    {"name": "unix_time", "arg_n": 0, "return": True, "result_len": 0},
-    {"name": "key_windows", "arg_n": 0, "return": True, "result_len": 256},
+    {"name": "print", "return": False, "result_len": 0},
+    {"name": "unix_time", "return": True, "result_len": 0},
+    {"name": "key_windows", "return": True, "result_len": 256},
 ]
+
