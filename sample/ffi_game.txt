@@ -192,14 +192,23 @@ sub
 store_local 0 # x座標
 push_int 0 ##193
 load_local 0
-if_less 202 ######################### x座標更新スキップ
+if_less 211 ######################### x座標更新スキップ
 push_int 19
 load_local 0
-if_greater 202 ######################### x座標更新スキップ
+if_greater 211 ######################### x座標更新スキップ
 push_char 32
 load_local 0
 store_global_array 6
-load_local 0  ##202
+push_char 32
+load_local 0
+store_global_array 5
+push_char 32
+load_local 0
+store_global_array 4
+push_char 32
+load_local 0
+store_global_array 3
+load_local 0  ##211
 push_int 1
 add
 store_local 0
@@ -207,47 +216,47 @@ load_local 0
 push_int 1
 load_global 1
 add
-if_less 212 ######################### x座標更新スキップ
+if_less 221 ######################### x座標更新スキップ
 jump 193 #########################
-push_int 0 ##212
+push_int 0 ##221
 load_global 2
-if_greater 219
-push_char 38 ##212
+if_greater 228
+push_char 38
 load_global 1
 store_global_array 6
 exit
 push_int 1
 load_global 2
-if_greater 226
-push_char 38 ##212
+if_greater 235
+push_char 38
 load_global 1
 store_global_array 5
 exit
 push_int 2
 load_global 2
-if_greater 233
-push_char 38 ##212
+if_greater 242
+push_char 38
 load_global 1
 store_global_array 4
 exit
 push_int 3
 load_global 2
-if_greater 240
-push_char 38 ##212
+if_greater 249
+push_char 38
 load_global 1
 store_global_array 3
 exit
 push_int 4
 load_global 2
-if_greater 247
-push_char 38 ##212
+if_greater 256
+push_char 38
 load_global 1
 store_global_array 4
 exit
 push_int 5
 load_global 2
-if_greater 253
-push_char 38 ##212
+if_greater 262
+push_char 38
 load_global 1
 store_global_array 5
 exit
