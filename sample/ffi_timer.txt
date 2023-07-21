@@ -1,0 +1,19 @@
+push_int 0
+store_global 0 # 秒数
+push_int 0
+ffi_call 1
+store_global 1 # ミリ秒数(before)
+load_global 1
+push_int 0
+ffi_call 1 # ミリ秒数(after)
+sub # 経過時間
+push_int 1000
+if_equal 13
+jump 6
+load_global 0
+push_int 1
+add
+store_global 0
+load_global 0
+print
+jump 3

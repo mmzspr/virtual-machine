@@ -1,0 +1,26 @@
+push_int 0    # スペースキーを押すと1になる
+store_local 0 # 秒数
+push_int 0
+ffi_call 1
+store_local 1 # ミリ秒数(before)
+load_local 1
+push_int 0
+ffi_call 1 # ミリ秒数(after)
+sub # 経過時間
+push_int 32 # 16ミリ秒で更新
+if_equal 13
+jump 6
+load_local 0
+push_int 1
+add
+store_local 0
+call 20
+jump 3
+
+push_int 0
+ffi_call 2
+store_local 0
+push_int 32
+load_local_array 0
+print
+exit

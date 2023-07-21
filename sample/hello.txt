@@ -1,13 +1,13 @@
-push_float 10  # \n
-push_float 111 # o
-push_float 108 # l
-push_float 108 # l
-push_float 101 # e
-push_float 72  # H
-print_char # H
-print_char # e
-print_char # l
-print_char # l
-print_char # o
-print_char # \n
+push_char 10  # \n
+push_char 111 # o
+push_char 108 # l
+push_char 108 # l
+push_char 101 # e
+push_char 72  # H
+print # H
+print # e
+print # l
+print # l
+print # o
+print # \n
 exit

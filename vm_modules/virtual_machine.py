@@ -2,8 +2,11 @@ from . import vm_error
 from . import vm_stack
 from . import vm_address_space
 from . import vm_array
+from . import vm_ffi
 import re
 import time
+import cffi
+import ctypes
 
 __all__ = ["run"]
 
@@ -25,6 +28,7 @@ class VirtualMachine:
 
     # ===== 初期化 =====
     def __init__(self, text, time_flag):
+        self.ffi = []
         self.time_flag = time_flag
         self.start_time = time.time()
         self.lines = text.split("\n") # 改行区切りのリスト
@@ -41,6 +45,7 @@ class VirtualMachine:
     # ===== 実行 =====
     def run(self):
         self.check_syntax()
+        self.load_ffi()
         program_lenght = len(self.progmem)
         while True:
             # プログラムカウンタを進める
@@ -112,6 +117,8 @@ class VirtualMachine:
                         self.cmd_jump(operand)
                     case "call":
                         self.cmd_call(operand)
+                    case "ffi_call":
+                        self.cmd_ffi_call(operand)
                     case "exit":
                         self.cmd_exit()
                     case _:
@@ -168,7 +175,8 @@ class VirtualMachine:
             "if_greater",
             "if_less",
             "jump",
-            "call"
+            "call",
+            "ffi_call"
         ]
         opcode_with_operand_int = [
             "push_int",
@@ -189,7 +197,8 @@ class VirtualMachine:
             "if_greater",
             "if_less",
             "jump",
-            "call"
+            "call",
+            "ffi_call"
         ]
         opcode_with_operand_float = [
             "push_float"
@@ -212,9 +221,23 @@ class VirtualMachine:
             elif opcode in opcode_with_operand_float:
                 line["operand"][0] = float(line["operand"][0])
             elif opcode in opcode_with_operand_char:
-                line["operand"][0] = chr(int(line["operand"][0]))
+                line["operand"][0] = chr(int(line["operand"][0])).encode('utf-8')
 
-
+    # ==============================
+    #           外部関数
+    # ==============================
+    def load_ffi(self):
+        ffi = cffi.FFI()
+        ffi.cdef(vm_ffi.ffi_cdef)
+        lib = ffi.dlopen(vm_ffi.ffi_library)
+        for f in vm_ffi.ffi_list:
+            self.ffi.append(
+                {
+                    "f": eval(f"lib.{f['name']}"),
+                    "arg_n": f["arg_n"],
+                    "return": f["return"],
+                    "result_len": f["result_len"]
+                })
     # ==============================
     #          コマンド
     # ==============================
@@ -234,7 +257,7 @@ class VirtualMachine:
         self.data_stack.push(vm_array.Array(float, operand[0]))
     
     def cmd_new_array_char(self, operand):
-        self.data_stack.push(vm_array.Array(str, operand[0]))
+        self.data_stack.push(vm_array.Array(bytes, operand[0]))
     
     def cmd_store_global_array(self, operand):
         array = self.global_area.load(operand[0])
@@ -303,7 +326,11 @@ class VirtualMachine:
         self.pc = operand[0] -2
     
     def cmd_print(self):
-        print(self.data_stack.pop())
+        data = self.data_stack.pop()
+        if type(data) is bytes:
+            print(data.decode('utf-8'))
+        else:
+            print(data)
     
     def cmd_call(self, operand):
         # メモリ領域確保
@@ -312,6 +339,36 @@ class VirtualMachine:
         # プログラムカウンタ変更
         self.return_stack.push(self.pc)
         self.pc = operand[0] -2
+    
+    def cmd_ffi_call(self, operand):
+        args = []
+        ffi = self.ffi[operand[0]]
+        arg_n = self.data_stack.pop()
+        for i in range(arg_n):
+            data = self.data_stack.pop()
+            if type(data) is vm_array.Array:
+                args.append(data.items)
+            else:
+                args.append(data)
+        result = ffi["f"](*args)
+
+        if ffi["return"]:
+            if hasattr(result, '__iter__'):
+                l = [0] * ffi["result_len"]
+                for i in range(ffi["result_len"]):
+                    l[i] = result[i]
+                if type(result[0]) is int:
+                    array = vm_array.Array(int, len(l))
+                    array.items = l
+                elif type(result[0]) is float:
+                    array = vm_array.Array(float, len(l))
+                    array.items = l
+                elif type(result[0]) is bytes:
+                    array = vm_array.Array(bytes, len(l))
+                    array.items = l
+                self.data_stack.push(array)
+            else:
+                self.data_stack.push(result)
     
     def cmd_exit(self):
         if self.return_stack.is_empty():
