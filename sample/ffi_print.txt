@@ -1,0 +1,21 @@
+new_array_char 5
+store_local 0
+push_char 72
+push_int 0
+store_local_array 0
+push_char 101
+push_int 1
+store_local_array 0
+push_char 108
+push_int 2
+store_local_array 0
+push_char 108
+push_int 3
+store_local_array 0
+push_char 111
+push_int 4
+store_local_array 0
+load_local 0
+push_int 1
+ffi_call 0
+exit

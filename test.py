@@ -483,6 +483,8 @@ def test_local(capsys):
     out, err = capsys.readouterr()
     assert out == "8\n10\n"
     assert exit_info.value.code == 0
+
+
 # ==============================
 #          複合
 # ==============================
