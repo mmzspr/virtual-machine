@@ -234,7 +234,6 @@ class VirtualMachine:
             self.ffi.append(
                 {
                     "f": eval(f"lib.{f['name']}"),
-                    "arg_n": f["arg_n"],
                     "return": f["return"],
                     "result_len": f["result_len"]
                 })

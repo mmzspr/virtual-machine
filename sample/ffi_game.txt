@@ -1,0 +1,262 @@
+# スペースキーを押すと1になる
+push_int 100 # 設定値：ミリ秒で更新
+store_local 2
+push_int 0
+store_global 0 # ゲームの状態フラグを0にする
+push_int 0 
+store_local 0 # 秒数初期化
+push_int 0 # 秒数差分リセット
+ffi_call 1
+store_local 1 # ミリ秒数(before)
+load_local 1 # 経過時間を再計算
+push_int 0
+ffi_call 1 # ミリ秒数(after)
+sub # 経過時間
+load_local 2 
+if_equal 18 #########################
+jump 11 #########################
+load_local 0 # 秒数+1
+push_int 1
+add
+store_local 0
+call 26 ######################### [main]
+jump 8 #########################
+
+# [main] メインの処理
+load_global 0
+push_int 0
+if_equal 33 ######################### call [init]
+load_global 0
+push_int 1
+if_equal 35 ######################### call [init]
+exit
+call 39 ######################### [init]
+exit
+call 102 ######################### [update]
+call 152 ######################### [draw]
+exit
+
+# [init] 初期化
+push_int 0
+store_global 1 # x座標
+push_int 0
+store_global 2 # y座標
+push_int 1
+store_global 0 # ゲームの状態フラグを1にする
+push_int 20
+store_local 0 # 画面横幅
+new_array_char 21
+store_global 3 # 画面バッファ1
+new_array_char 21
+store_global 4 # 画面バッファ2
+new_array_char 21
+store_global 5 # 画面バッファ3
+new_array_char 21
+store_global 6 # 画面バッファ4
+new_array_char 21
+store_global 7 # 画面バッファ5
+# 画面描画
+push_int 0
+store_local 1 # 画面バッファの文字数
+push_char 32 # 描画開始 ##61
+load_local 1
+store_global_array 3
+push_char 32
+load_local 1
+store_global_array 4
+push_char 32
+load_local 1
+store_global_array 5
+push_char 32
+load_local 1
+store_global_array 6
+push_char 35
+load_local 1
+store_global_array 7
+load_local 1
+push_int 1
+add
+store_local 1
+load_local 1
+load_local 0
+if_equal 84 ############ exit
+jump 61  ##########
+push_char 10 # 改行  ##84
+load_local 1
+store_global_array 3
+push_char 10
+load_local 1
+store_global_array 4
+push_char 10
+load_local 1
+store_global_array 5
+push_char 10
+load_local 1
+store_global_array 6
+push_char 10
+load_local 1
+store_global_array 7
+exit
+
+# [update] 更新
+load_global 2
+push_int 0
+if_equal 115 ######################### y座標更新スキップ
+load_global 2
+push_int 1
+add
+store_global 2
+load_global 2 
+push_int 6
+if_greater 114 ######################### y座標初期化スキップ
+push_int 0
+store_global 2
+jump 118 ######################### スペースキースキップ
+push_int 32 # スペースキー
+call 145 ######################### [key]
+store_global 2
+load_global 1
+push_int 0
+if_equal 129 ######################### x座標更新スキップ
+push_int 37 # 左矢印キー
+call 145 ######################### [key]
+push_int 0
+if_equal 129 ######################### x座標更新スキップ
+push_int 1
+load_global 1
+sub
+store_global 1
+load_global 1 ##129
+push_int 19
+if_equal 140 ######################### x座標更新スキップ
+push_int 39 # 右矢印キー
+call 145 ######################### [key]
+push_int 0
+if_equal 140 ######################### x座標更新スキップ
+push_int 1
+load_global 1
+add
+store_global 1
+###         load_global 1 ##140
+###         print
+exit
+
+# [key] スタックのトップのキーが押されたら1, そうでなけれな0 
+push_int 0
+ffi_call 2
+store_local 0
+load_local_array 0
+exit
+
+# [draw] 描画
+call 189 ######################### [update buffer]
+load_global 3  # 画面描画
+push_int 1
+ffi_call 0
+load_global 4
+push_int 1
+ffi_call 0
+load_global 5
+push_int 1
+ffi_call 0
+load_global 6
+push_int 1
+ffi_call 0
+load_global 7
+push_int 1
+ffi_call 0
+
+new_array_char 4 # カーソル移動
+store_local 1
+push_char 27
+push_int 0
+store_local_array 1
+push_char 91
+push_int 1
+store_local_array 1
+push_char 53
+push_int 2
+store_local_array 1
+push_char 65
+push_int 3
+store_local_array 1
+load_local 1
+push_int 1
+ffi_call 0 # 出力：Hello\n
+exit
+
+# [update buffer] 画面バッファを更新
+push_int 1
+load_global 1
+sub
+store_local 0 # x座標
+push_int 0 ##193
+load_local 0
+if_less 211 ######################### x座標更新スキップ
+push_int 19
+load_local 0
+if_greater 211 ######################### x座標更新スキップ
+push_char 32
+load_local 0
+store_global_array 6
+push_char 32
+load_local 0
+store_global_array 5
+push_char 32
+load_local 0
+store_global_array 4
+push_char 32
+load_local 0
+store_global_array 3
+load_local 0  ##211
+push_int 1
+add
+store_local 0
+load_local 0
+push_int 1
+load_global 1
+add
+if_less 221 ######################### x座標更新スキップ
+jump 193 #########################
+push_int 0 ##221
+load_global 2
+if_greater 228
+push_char 38
+load_global 1
+store_global_array 6
+exit
+push_int 1
+load_global 2
+if_greater 235
+push_char 38
+load_global 1
+store_global_array 5
+exit
+push_int 2
+load_global 2
+if_greater 242
+push_char 38
+load_global 1
+store_global_array 4
+exit
+push_int 3
+load_global 2
+if_greater 249
+push_char 38
+load_global 1
+store_global_array 3
+exit
+push_int 4
+load_global 2
+if_greater 256
+push_char 38
+load_global 1
+store_global_array 4
+exit
+push_int 5
+load_global 2
+if_greater 262
+push_char 38
+load_global 1
+store_global_array 5
+exit
