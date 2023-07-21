@@ -1,0 +1,123 @@
+# スペースキーを押すと1になる
+push_int 10 # 設定値：ミリ秒で更新
+store_local 2
+push_int 0
+store_global 0 # ゲームの状態フラグを0にする
+push_int 0 
+store_local 0 # 秒数初期化
+push_int 0 # 秒数差分リセット
+ffi_call 1
+store_local 1 # ミリ秒数(before)
+load_local 1 # 経過時間を再計算
+push_int 0
+ffi_call 1 # ミリ秒数(after)
+sub # 経過時間
+load_local 2 
+if_equal 18 #########################
+jump 11 #########################
+load_local 0 # 秒数+1
+push_int 1
+add
+store_local 0
+call 26 ######################### [main]
+jump 8 #########################
+
+# [main] メインの処理
+load_global 0
+push_int 0
+if_equal 33 ######################### call [init]
+load_global 0
+push_int 1
+if_equal 35 ######################### call [init]
+exit
+call 39 ######################### [init]
+exit
+call 48 ######################### [update]
+call 80 ######################### [draw]
+exit
+
+# [init] 初期化
+push_int 0
+store_global 1 # x座標
+push_int 0
+store_global 2 # y座標
+push_int 1
+store_global 0 # ゲームの状態フラグを1にする
+exit
+
+# [update] 更新
+###         push_int 32 # スペースキー
+###         call 73 ######################### [key]
+###         print
+push_int 37 # 左矢印キー
+call 73 ######################### [key]
+push_int 0
+if_equal 60 ######################### x座標更新スキップ
+push_int 1
+load_global 1
+sub
+store_global 1
+push_int 39 # 右矢印キー
+call 73 ######################### [key]
+push_int 0
+if_equal 68 ######################### x座標更新スキップ
+push_int 1
+load_global 1
+add
+store_global 1
+###         load_global 1
+###         print
+exit
+
+# [key] スタックのトップのキーが押されたら1, そうでなけれな0 
+push_int 0
+ffi_call 2
+store_local 0
+load_local_array 0
+exit
+
+# [draw] 描画
+new_array_char 6
+store_local 0
+push_char 72
+push_int 0
+store_local_array 0
+push_char 101
+push_int 1
+store_local_array 0
+push_char 108
+push_int 2
+store_local_array 0
+push_char 108
+push_int 3
+store_local_array 0
+push_char 111
+push_int 4
+store_local_array 0
+push_char 10
+push_int 5
+store_local_array 0
+load_local 0
+push_int 1
+ffi_call 0 # 出力：Hello\n
+load_local 0
+push_int 1
+ffi_call 0 # 出力：Hello\n
+new_array_char 4
+store_local 1
+push_char 27
+push_int 0
+store_local_array 1
+push_char 91
+push_int 1
+store_local_array 1
+push_char 50
+push_int 2
+store_local_array 1
+push_char 65
+push_int 3
+store_local_array 1
+load_local 1
+push_int 1
+ffi_call 0 # 出力：Hello\n
+exit
