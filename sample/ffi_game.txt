@@ -33,7 +33,7 @@ exit
 call 39 ######################### [init]
 exit
 call 102 ######################### [update]
-call 135 ######################### [draw]
+call 138 ######################### [draw]
 exit
 
 # [init] 初期化
@@ -100,28 +100,31 @@ exit
 
 # [update] 更新 48です
 ###         push_int 32 # スペースキー
-###         call 126 ######################### [key]
+###         call 132 ######################### [key]
 ###         print
 load_global 1
 push_int 0
 if_equal 116 ######################### x座標更新スキップ
 push_int 37 # 左矢印キー
-call 129 ######################### [key]
+call 132 ######################### [key]
 push_int 0
 if_equal 116 ######################### x座標更新スキップ
 push_int 1
 load_global 1
 sub
 store_global 1
-push_int 39 # 右矢印キー ##116
-call 129 ######################### [key]
+load_global 1 ##116
+push_int 19
+if_equal 127 ######################### x座標更新スキップ
+push_int 39 # 右矢印キー
+call 132 ######################### [key]
 push_int 0
-if_equal 124 ######################### x座標更新スキップ
+if_equal 127 ######################### x座標更新スキップ
 push_int 1
 load_global 1
 add
 store_global 1
-###         load_global 1 ##124
+###         load_global 1 ##127
 ###         print
 exit
 
@@ -133,7 +136,7 @@ load_local_array 0
 exit
 
 # [draw] 描画
-call 172 ######################### [update buffer]
+call 175 ######################### [update buffer]
 load_global 3  # 画面描画
 push_int 1
 ffi_call 0
@@ -174,13 +177,16 @@ push_int 1
 load_global 1
 sub
 store_local 0 # x座標
-push_int 0 ##177
+push_int 0 ##180
 load_local 0
-if_less 183 ######################### x座標更新スキップ
+if_less 189 ######################### x座標更新スキップ
+push_int 19
+load_local 0
+if_greater 189 ######################### x座標更新スキップ
 push_char 32
 load_local 0
 store_global_array 6
-load_local 0  ##183
+load_local 0  ##189
 push_int 1
 add
 store_local 0
@@ -188,9 +194,9 @@ load_local 0
 push_int 1
 load_global 1
 add
-if_less 193 ######################### x座標更新スキップ
-jump 177 #########################
-push_char 38 ##193
+if_less 199 ######################### x座標更新スキップ
+jump 180 #########################
+push_char 38 ##199
 load_global 1
 store_global_array 6
 exit
